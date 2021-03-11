@@ -11,6 +11,8 @@ import com.example.stonks.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private val YAHOO_API_KEY = BuildConfig.YAHOO_API_KEY
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)

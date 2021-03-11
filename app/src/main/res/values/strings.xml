@@ -3,4 +3,18 @@
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_notifications">Notifications</string>
+
+    <!--Detail View-->
+    <string name="detail_operating_cash_flow">Current Operating Cash Flow</string>
+    <string name="detail_total_debt">Total Debt (Short + Long Term Debt)</string>
+    <string name="detail_investment">Cash and Short Term Investment</string>
+    <string name="detail_outstanding_share">No. of Shares Outstanding</string>
+    <string name="detail_last_close">Last Close</string>
+    <string name="detail_cash_flow_Yr_1_5">Cash flow growth rate (Yr 1–5)</string>
+    <string name="detail_cash_flow_Yr_5_10">Cash flow growth rate (Yr 5–10)</string>
+    <string name="detail_cash_flow_Yr_11_20">Cash flow growth rate (Yr 11–20)</string>
+    <string name="detail_discount_rate">Discount Rate</string>
+    <string name="detail_final_value">Final Intrinsic Value Per Share</string>
+    <string name="detail_valuation">Undervalue / Overvalue</string>
+    <string name="detail_dummy_number">$10,000 m</string>
 </resources>

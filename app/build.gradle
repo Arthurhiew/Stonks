@@ -15,6 +15,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "YAHOO_API_KEY", "\"f03e2115efmshcd38514efe8f339p1e2f68jsn7b080f163a46\"")
     }
 
     buildTypes {
