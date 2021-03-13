@@ -8,11 +8,11 @@ import com.example.stonks.data.StockDataRepository
 
 class StockDataViewModel : ViewModel() {
     private val repository: StockDataRepository = StockDataRepository()
-    val stockData: LiveData<StockData> = repository.getFinancialData()
+    val stockData: LiveData<StockData> = repository.getStockData()
     val loadingStatus: LiveData<LoadingStatus> = repository.getLoadingStatus()
 
-    fun fetchFinancialData(symbol: String) {
-        repository.fetchFinancialData(symbol)
+    fun getStockData(symbol: String, region: String = "US") {
+        repository.getStockData(symbol, region)
     }
 
 }

@@ -22,7 +22,7 @@ data class SummaryDetail(
 )
 data class PreviousClose(
     @SerializedName("raw")
-    val value: Long
+    val value: Float
 )
 data class DefaultKeyStatistics(
     val sharesOutstanding: SharesOutstanding

@@ -2,23 +2,23 @@ package com.example.stonks.data
 
 data class StockData(
     // user input from searchbox
-    val symbol:String,
+    var symbol:String,
 
     // getStatistics > financialData > operatingCashflow > raw
-    val curOpCashFlow: Long,
+    var curOpCashFlow: Long,
 
     //getStatistics > summaryDetail > previousClose > raw
-    val lastClose:Float,
+    var lastClose:Float,
 
     //getStatistics > defaultKeyStatistics > sharesOutstanding > raw
-    val sharesOutstanding: Long,
+    var sharesOutstanding: Long,
 
     // getBalanceSheet > balanceSheetHistoryQuarterly > balanceSheetStatements[0]> shortLongTermDebt > raw + longTermDebt > raw
-    val totalDebt:Long,
+    var totalDebt:Long,
 
     //getBalanceSheet > balanceSheetHistoryQuarterly > balanceSheetStatements[0]> cash + shortTermInvestments
-    val cashNShortTInvestment:Long,
+    var cashNShortTermInvestment:Long,
 
     //getAnalysis > earningsTrend > trend[4] > growth >raw
-    val growthRate: Long,
+    var growthRate: Long,
 )
