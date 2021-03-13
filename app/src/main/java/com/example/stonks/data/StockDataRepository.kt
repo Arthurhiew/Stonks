@@ -10,7 +10,7 @@ import com.example.stonks.utils.YahooApiService
 import retrofit2.*
 
 class StockDataRepository {
-    private val financialData = MutableLiveData<FinancialData>()
+    private val financialData = MutableLiveData<StockData>()
     private val loadingStatus = MutableLiveData<LoadingStatus>()
     private var currentSymbol: String? = null
     private val yahooApiService: YahooApiService
@@ -29,7 +29,7 @@ class StockDataRepository {
         yahooApiService = retrofit.create(YahooApiService::class.java)
     }
 
-    fun getFinancialData(): LiveData<FinancialData> {
+    fun getFinancialData(): LiveData<StockData> {
         return financialData
     }
 
@@ -43,10 +43,10 @@ class StockDataRepository {
             currentSymbol = symbol
             loadingStatus.value = LoadingStatus.LOADING
             val result = yahooApiService.getFinancials(symbol, "US")
-            result.enqueue(object : Callback<FinancialData> {
+            result.enqueue(object : Callback<StockData> {
                 override fun onResponse(
-                    call: Call<FinancialData>,
-                    response: Response<FinancialData>
+                    call: Call<StockData>,
+                    response: Response<StockData>
                 ) {
                     if (response.isSuccessful) {
                         financialData.value = response.body()
@@ -58,7 +58,7 @@ class StockDataRepository {
                     }
                 }
 
-                override fun onFailure(call: Call<FinancialData>, t: Throwable) {
+                override fun onFailure(call: Call<StockData>, t: Throwable) {
                     t.printStackTrace()
                     Log.d(TAG, "API called failed: $symbol")
                     loadingStatus.value = LoadingStatus.ERROR

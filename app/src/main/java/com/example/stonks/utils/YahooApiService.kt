@@ -1,6 +1,6 @@
 package com.example.stonks.utils
 
-import com.example.stonks.data.FinancialData
+import com.example.stonks.data.StockData
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,6 +11,6 @@ interface YahooApiService {
     fun getFinancials(
         @Query("symbol") symbol: String,
         @Query("region") region: String,
-    ) : Call<FinancialData>
+    ) : Call<StockData>
 
 }
