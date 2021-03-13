@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Stonks">
-        <activity android:name=".ui.DeatailActivity.StockDetailActivity"
+        <activity android:name=".ui.DetailActivity.StockDetailActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.Stonks.NoActionBar"/>
         <activity

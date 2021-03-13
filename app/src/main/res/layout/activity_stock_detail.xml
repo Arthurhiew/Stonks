@@ -4,56 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DeatailActivity.StockDetailActivity">
+    tools:context=".ui.DetailActivity.StockDetailActivity">
 
     <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="148dp"
-        android:text="@string/detail_dummy_number"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView20"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView20"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="144dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/detail_last_close"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <TextView
-        android:id="@+id/textView21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/detail_final_value"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView22"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/detail_dummy_number"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView23"
-        app:layout_constraintEnd_toEndOf="@+id/textView21"
-        app:layout_constraintStart_toStartOf="@+id/textView21" />
-
-    <TextView
-        android:id="@+id/textView25"
+        android:id="@+id/title_op_cashflow_tv"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -64,122 +18,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/value_op_cashflow_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:text="@string/detail_dummy_number"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView17"
-        app:layout_constraintEnd_toEndOf="@+id/textView12"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView12"
-        app:layout_constraintTop_toTopOf="@+id/textView17"
-        app:layout_constraintVertical_bias="0.266" />
+        app:layout_constraintBottom_toBottomOf="@+id/title_op_cashflow_tv"
+        app:layout_constraintStart_toEndOf="@+id/title_op_cashflow_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_op_cashflow_tv" />
 
     <TextView
-        android:id="@+id/textView13"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_cash_flow_Yr_11_20"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView3"
-        app:layout_constraintEnd_toEndOf="@+id/textView17"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView17"
-        app:layout_constraintTop_toTopOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_dummy_number"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
-        app:layout_constraintEnd_toEndOf="@+id/textView8"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/textView8"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_dummy_number"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="@+id/textView6"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toTopOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.25" />
-
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_cash_flow_Yr_5_10"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="@+id/textView26"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView26"
-        app:layout_constraintTop_toTopOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:text="@string/detail_dummy_number"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView26"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView26"
-        app:layout_constraintVertical_bias="0.461" />
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_dummy_number"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView13"
-        app:layout_constraintEnd_toEndOf="@+id/textView18"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView18"
-        app:layout_constraintTop_toTopOf="@+id/textView13"
-        app:layout_constraintVertical_bias="0.533" />
-
-    <TextView
-        android:id="@+id/textView19"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_dummy_number"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView14"
-        app:layout_constraintEnd_toEndOf="@+id/textView15"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView15"
-        app:layout_constraintTop_toTopOf="@+id/textView14"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_dummy_number"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView3"
-        app:layout_constraintEnd_toEndOf="@+id/textView7"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/textView7"
-        app:layout_constraintTop_toTopOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.533" />
-
-    <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/title_debt_tv"
         android:layout_width="101dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -187,59 +37,23 @@
         android:text="@string/detail_total_debt"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView25" />
+        app:layout_constraintTop_toBottomOf="@+id/title_op_cashflow_tv" />
 
     <TextView
-        android:id="@+id/textView14"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="@string/detail_discount_rate"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
-        app:layout_constraintEnd_toEndOf="@+id/textView13"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView13"
-        app:layout_constraintTop_toTopOf="@+id/textView5"
-        app:layout_constraintVertical_bias="0.2" />
-
-    <TextView
-        android:id="@+id/textView26"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="@string/detail_cash_flow_Yr_1_5"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView25"
-        app:layout_constraintEnd_toStartOf="@+id/textView12"
-        app:layout_constraintTop_toTopOf="@+id/textView25"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/detail_outstanding_share"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/textView9"
-        app:layout_constraintHorizontal_bias="0.062"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/value_debt_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:text="@string/detail_dummy_number"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView25"
-        app:layout_constraintStart_toEndOf="@+id/textView25"
-        app:layout_constraintTop_toTopOf="@+id/textView25" />
+        app:layout_constraintBottom_toBottomOf="@+id/title_debt_tv"
+        app:layout_constraintEnd_toEndOf="@+id/value_op_cashflow_tv"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/value_op_cashflow_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_debt_tv"
+        app:layout_constraintVertical_bias="0.25" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/title_investment_tv"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -247,29 +61,220 @@
         android:text="@string/detail_investment"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/title_debt_tv" />
 
     <TextView
-        android:id="@+id/textView24"
+        android:id="@+id/value_investment_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_dummy_number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_investment_tv"
+        app:layout_constraintEnd_toEndOf="@+id/value_debt_tv"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/value_debt_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_investment_tv"
+        app:layout_constraintVertical_bias="0.533" />
+
+    <TextView
+        android:id="@+id/title_num_share_tv"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/detail_outstanding_share"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/value_num_share_tv"
+        app:layout_constraintHorizontal_bias="0.062"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_investment_tv" />
+
+    <TextView
+        android:id="@+id/value_num_share_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_dummy_number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_num_share_tv"
+        app:layout_constraintEnd_toEndOf="@+id/value_investment_tv"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/value_investment_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_num_share_tv" />
+
+    <TextView
+        android:id="@+id/title_growth_rate_1_5_tv"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/detail_cash_flow_Yr_1_5"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_op_cashflow_tv"
+        app:layout_constraintEnd_toStartOf="@+id/value_growth_rate_1_5_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_op_cashflow_tv"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/value_growth_rate_1_5_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/detail_dummy_number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_growth_rate_1_5_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/title_growth_rate_1_5_tv"
+        app:layout_constraintVertical_bias="0.461" />
+
+    <TextView
+        android:id="@+id/title_growth_rate_5_10_tv"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_cash_flow_Yr_5_10"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_debt_tv"
+        app:layout_constraintEnd_toEndOf="@+id/title_growth_rate_1_5_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/title_growth_rate_1_5_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_debt_tv"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <TextView
+        android:id="@+id/value_growth_rate_5_10_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_dummy_number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_growth_rate_5_10_tv"
+        app:layout_constraintEnd_toEndOf="@+id/value_growth_rate_1_5_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/value_growth_rate_1_5_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_growth_rate_5_10_tv"
+        app:layout_constraintVertical_bias="0.266" />
+
+
+    <TextView
+        android:id="@+id/title_growth_rate_11_20_tv"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_cash_flow_Yr_11_20"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_investment_tv"
+        app:layout_constraintEnd_toEndOf="@+id/title_growth_rate_5_10_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/title_growth_rate_5_10_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_investment_tv"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <TextView
+        android:id="@+id/value_growth_rate_11_20_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_dummy_number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_growth_rate_11_20_tv"
+        app:layout_constraintEnd_toEndOf="@+id/value_growth_rate_5_10_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/value_growth_rate_5_10_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_growth_rate_11_20_tv"
+        app:layout_constraintVertical_bias="0.533" />
+
+    <TextView
+        android:id="@+id/title_discount_rate_tv"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_discount_rate"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_num_share_tv"
+        app:layout_constraintEnd_toEndOf="@+id/title_growth_rate_11_20_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/title_growth_rate_11_20_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_num_share_tv"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/value_discount_rate_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_dummy_number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_discount_rate_tv"
+        app:layout_constraintEnd_toEndOf="@+id/value_growth_rate_11_20_tv"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/value_growth_rate_11_20_tv"
+        app:layout_constraintTop_toTopOf="@+id/title_discount_rate_tv"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/title_last_close_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/detail_last_close"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_num_share_tv" />
+
+    <TextView
+        android:id="@+id/value_last_close_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="148dp"
+        android:text="@string/detail_dummy_number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_last_close_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/title_last_close_tv"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <TextView
+        android:id="@+id/title_intrinsic_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/detail_final_value"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/value_intrinsic_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/value_intrinsic_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/detail_dummy_number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/title_verdict_tv"
+        app:layout_constraintEnd_toEndOf="@+id/title_intrinsic_tv"
+        app:layout_constraintStart_toStartOf="@+id/title_intrinsic_tv" />
+
+    <TextView
+        android:id="@+id/title_verdict_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/detail_valuation"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/value_verdict_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/value_verdict_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="@string/detail_dummy_number"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textView23"
+        app:layout_constraintEnd_toEndOf="@+id/title_verdict_tv"
         app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="@+id/textView23" />
+        app:layout_constraintStart_toStartOf="@+id/title_verdict_tv" />
 
-    <TextView
-        android:id="@+id/textView23"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/detail_valuation"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
