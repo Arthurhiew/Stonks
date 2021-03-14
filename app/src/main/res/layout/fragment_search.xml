@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.search.SearchFragment">
 
     <EditText
@@ -11,19 +11,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search a Stock..."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:paddingHorizontal="10dp"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btn_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_search_box" />
+        android:layout_marginHorizontal="8dp"
+        android:text="Search" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/loading_error"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorError"
+            android:visibility="invisible"
+
+            />
+
+        <ProgressBar
+            android:id="@+id/pb_loading_indicator"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="48dp"
+            android:visibility="invisible" />
+
+    </FrameLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -1,13 +1,18 @@
 package com.example.stonks.ui.search
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.stonks.data.LoadingStatus
+import com.example.stonks.data.SearchRepository
+import com.example.stonks.data.StockSearchItem
 
 class SearchViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+    private val repository: SearchRepository = SearchRepository()
+    var stockSearchResult: LiveData<List<StockSearchItem>> = repository.getStockSearchResults()
+    val loadingStatus: LiveData<LoadingStatus> = repository.getLoadingStatus()
+
+    fun executeStockSearch(query: String, region: String) {
+        repository.executeStockSearch(query, region)
     }
-    val text: LiveData<String> = _text
 }
