@@ -19,7 +19,6 @@ class StockDataRepository {
     private val yahooApiService: YahooApiService
     private val TAG = StockDataRepository::class.java.simpleName
     private val BASE_URL = "https://apidojo-yahoo-finance-v1.p.rapidapi.com"
-    private val API_KEY = BuildConfig.YAHOO_API_KEY
 
     init {
         loadingStatus.value = LoadingStatus.SUCCESS
