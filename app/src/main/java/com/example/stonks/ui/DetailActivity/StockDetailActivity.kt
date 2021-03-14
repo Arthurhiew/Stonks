@@ -58,8 +58,8 @@ class StockDetailActivity : AppCompatActivity() {
         return (totalDebt / numShare).toFloat()
     }
 
-    private fun getCashPerShare(totalInvesntment: Long, numShare: Long): Float {
-        return (totalInvesntment / numShare).toFloat()
+    private fun getCashPerShare(totalInvestment: Long, numShare: Long): Float {
+        return (totalInvestment / numShare).toFloat()
 
     }
 
