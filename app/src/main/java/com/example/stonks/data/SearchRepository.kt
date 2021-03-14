@@ -33,19 +33,18 @@ class SearchRepository {
     fun getLoadingStatus(): LiveData<LoadingStatus> {
         return loadingStatus
     }
-    fun getStockSearchResults(query: String, region: String): LiveData<List<StockSearchItem>> {
-        executeStockSearch(query, region)
-        Log.d(TAG, "returning stock search results with query ${query}")
+
+    fun getStockSearchResults(): LiveData<List<StockSearchItem>> {
         return stockSearchResults
     }
 
-    private fun executeStockSearch(query: String, region: String) {
+    fun executeStockSearch(query: String, region: String) {
         Log.d(TAG, "Execute new fetch? ${shouldExecuteFetch(query)}")
         if (shouldExecuteFetch(query)) {
             currentQuery = query
             loadingStatus.value = LoadingStatus.LOADING
             val result = yahooApiService.executeStockSearch(query, region)
-            result.enqueue(object: Callback<StockSearchResponse> {
+            result.enqueue(object : Callback<StockSearchResponse> {
                 override fun onResponse(
                     call: Call<StockSearchResponse>,
                     response: Response<StockSearchResponse>

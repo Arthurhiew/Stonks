@@ -17,4 +17,6 @@
     <string name="detail_final_value">Final Intrinsic Value Per Share</string>
     <string name="detail_valuation">Undervalue / Overvalue</string>
     <string name="detail_dummy_number">$10,000 m</string>
+
+    <string name="loading_error">Cannot execute search. Please check your internet connection</string>
 </resources>

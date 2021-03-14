@@ -1,9 +1,9 @@
-package com.example.stonks.utils
+package com.example.stonks
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.stonks.data.StockData
 import com.example.stonks.data.LoadingStatus
+import com.example.stonks.data.StockData
 import com.example.stonks.data.StockDataRepository
 
 class StockDataViewModel : ViewModel() {
