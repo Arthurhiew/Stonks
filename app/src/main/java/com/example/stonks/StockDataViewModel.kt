@@ -9,7 +9,9 @@ import com.example.stonks.data.StockDataRepository
 class StockDataViewModel : ViewModel() {
     private val repository: StockDataRepository = StockDataRepository()
 
+
     lateinit var stockData: LiveData<StockData>
+
     val loadingStatus: LiveData<LoadingStatus> = repository.getLoadingStatus()
 
     fun getStockData(

@@ -1,7 +1,7 @@
 package com.example.stonks
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -12,7 +12,7 @@ import com.example.stonks.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private val YAHOO_API_KEY = BuildConfig.YAHOO_API_KEY
-
+    private val TAG = MainActivity::class.java.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
@@ -29,5 +29,11 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+//        for(i in 1..20) {
+//            print(i)
+//            Log.d(TAG,i.toString())
+//        }
     }
+
+
 }
