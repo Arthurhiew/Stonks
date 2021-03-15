@@ -1,5 +1,7 @@
 package com.example.stonks.data
 
+import java.io.Serializable
+
 data class StockData(
     // user input from searchbox
     var symbol:String,
@@ -21,4 +23,4 @@ data class StockData(
 
     //getAnalysis > earningsTrend > trend[4] > growth >raw
     var growthRate: Long,
-)
+):Serializable

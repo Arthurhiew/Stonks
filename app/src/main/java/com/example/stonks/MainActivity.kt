@@ -29,10 +29,7 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-//        for(i in 1..20) {
-//            print(i)
-//            Log.d(TAG,i.toString())
-//        }
+
     }
 
 

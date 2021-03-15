@@ -1,17 +1,32 @@
 package com.example.stonks.ui.DetailActivity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.stonks.StockDataViewModel
+import com.example.stonks.data.StockData
+import com.example.stonks.data.StockSearchItem
 import com.example.stonks.databinding.ActivityStockDetailBinding
 
 class StockDetailActivity : AppCompatActivity() {
+    private lateinit var stockSearchItem: StockSearchItem
+    private val TAG = StockDetailActivity::class.java.simpleName
+    private lateinit var stockDataViewModel: StockDataViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityStockDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
 //        val PV_Cash_Flow_10yr =
+        stockDataViewModel = ViewModelProvider(this).get(StockDataViewModel::class.java)
+
+        val intent = intent
+        if (intent != null) {
+            stockSearchItem = intent.getSerializableExtra("searchResultItem") as StockSearchItem
+            Log.d(TAG, stockSearchItem.symbol)
+            stockDataViewModel.getStockData(stockSearchItem.symbol, "US")
+        }
 
 
         binding.valueOpCashflowTv.text = "$11,111 m"
@@ -22,7 +37,7 @@ class StockDetailActivity : AppCompatActivity() {
         binding.valueGrowthRate510Tv.text = "$11,111 m"
         binding.valueGrowthRate1120Tv.text = "$11,111 m"
         binding.valueDiscountRateTv.text = "$11,111 m"
-        binding.valueLastCloseTv.text ="$"+" m"
+        binding.valueLastCloseTv.text = "$" + " m"
         binding.valueIntrinsicTv.text = "$11,111 m"
         binding.valueVerdictTv.text = "$11,111 m"
 
@@ -75,5 +90,10 @@ class StockDetailActivity : AppCompatActivity() {
     ): Float {
         return intrinsicValueBeforeCashOrDebt + cashPerShare - debtPerShare
 
+    }
+
+
+    companion object {
+        const val EXTRA_STOCK_DATA = "StockDetailActivity.StockData"
     }
 }
