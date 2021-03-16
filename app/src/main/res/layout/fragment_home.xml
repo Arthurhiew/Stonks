@@ -7,66 +7,56 @@
     tools:context=".ui.home.HomeFragment">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:text="Watch List"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tvLabelSymbol"
-        app:layout_constraintStart_toStartOf="@+id/tvLabelSymbol"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/tvLabelSymbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginVertical="10dp"
         android:text="Symbol"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/rvStockDataItems"
         app:layout_constraintEnd_toStartOf="@+id/tvLabelPrice"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvLabelPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginVertical="10dp"
         android:text="Price"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/rvStockDataItems"
         app:layout_constraintEnd_toStartOf="@+id/tvLabelIntrinsicValue"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvLabelSymbol" />
+        app:layout_constraintStart_toEndOf="@+id/tvLabelSymbol"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvLabelIntrinsicValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginVertical="10dp"
         android:text="Intrinsic Value"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/rvStockDataItems"
         app:layout_constraintEnd_toStartOf="@+id/tvLabelOverUnderValued"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvLabelPrice" />
+        app:layout_constraintStart_toEndOf="@+id/tvLabelPrice"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvLabelOverUnderValued"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginVertical="10dp"
         android:text="Over/Under valued"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/rvStockDataItems"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvLabelIntrinsicValue" />
+        app:layout_constraintStart_toEndOf="@+id/tvLabelIntrinsicValue"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvStockDataItems"
@@ -76,6 +66,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLabelSymbol"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvLabelSymbol" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
