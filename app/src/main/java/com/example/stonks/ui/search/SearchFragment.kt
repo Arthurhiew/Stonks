@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.stonks.R
+import com.example.stonks.StockDataViewModel
 import com.example.stonks.data.LoadingStatus
 import com.example.stonks.data.StockSearchItem
 import com.example.stonks.ui.DetailActivity.StockDetailActivity
@@ -22,6 +23,7 @@ import com.example.stonks.ui.DetailActivity.StockDetailActivity
 class SearchFragment : Fragment(), SearchAdapter.OnSearchResultClickListener {
 
     private lateinit var searchViewModel: SearchViewModel
+//    private lateinit var stockDataViewModel: StockDataViewModel
 
     //    private lateinit var binding: FragmentSearchBinding
     private lateinit var searchboxET: EditText
@@ -59,6 +61,8 @@ class SearchFragment : Fragment(), SearchAdapter.OnSearchResultClickListener {
         searchResultsRV.adapter = searchAdapter
 
         searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
+//        stockDataViewModel = ViewModelProvider(this).get(StockDataViewModel::class.java)
+
         searchViewModel.stockSearchResult.observe(
             viewLifecycleOwner,
             { stockSearchResult ->
@@ -105,8 +109,13 @@ class SearchFragment : Fragment(), SearchAdapter.OnSearchResultClickListener {
 
     override fun onSearchResultClickListener(resultItem: StockSearchItem) {
         Log.d(TAG, "Search result item clicked, switching to StockDetailActivity by intent")
+        Log.d(TAG, resultItem.symbol)
+//        stockDataViewModel.getStockData(resultItem.symbol, "US")
+
         Intent(activity, StockDetailActivity::class.java).putExtra("searchResultItem", resultItem)
             .also { startActivity(it) }
+
+
     }
 
 

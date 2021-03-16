@@ -16,5 +16,5 @@ data class Trend(
 
 data class Growth(
     @SerializedName("raw")
-    val value: Long
+    val value: Float
 )
