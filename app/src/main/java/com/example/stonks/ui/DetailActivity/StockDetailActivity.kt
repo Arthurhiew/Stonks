@@ -1,10 +1,10 @@
 package com.example.stonks.ui.DetailActivity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.stonks.StockDataViewModel
+import com.example.stonks.data.LoadingStatus
 import com.example.stonks.data.StockData
 import com.example.stonks.data.StockSearchItem
 import com.example.stonks.databinding.ActivityStockDetailBinding
@@ -13,6 +13,13 @@ class StockDetailActivity : AppCompatActivity() {
     private lateinit var stockSearchItem: StockSearchItem
     private val TAG = StockDetailActivity::class.java.simpleName
     private lateinit var stockDataViewModel: StockDataViewModel
+    private var stockData: StockData = StockData()
+    private var loadingStatisticsStatus: LoadingStatus = LoadingStatus.LOADING
+    private var loadingBalanceSheetStatus: LoadingStatus = LoadingStatus.LOADING
+    private var loadingAnalysisStatus: LoadingStatus = LoadingStatus.LOADING
+    private var loadingStatus: LoadingStatus = LoadingStatus.LOADING
+
+    //    private var stockData: StockData = StockData(null, null, null, null, null, null, null)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityStockDetailBinding.inflate(layoutInflater)
@@ -24,9 +31,66 @@ class StockDetailActivity : AppCompatActivity() {
         val intent = intent
         if (intent != null) {
             stockSearchItem = intent.getSerializableExtra("searchResultItem") as StockSearchItem
-            Log.d(TAG, stockSearchItem.symbol)
-            stockDataViewModel.getStockData(stockSearchItem.symbol, "US")
+            stockDataViewModel.loadStockData(stockSearchItem.symbol, "US")
         }
+
+        // stockdata binding here
+        stockDataViewModel.statisticsData.observe(
+            this,
+            { data ->
+                stockData.symbol = stockSearchItem.symbol
+                stockData.curOpCashFlow = data.financialData.operatingCashflow.value
+                stockData.lastClose = data.summaryDetail.previousClose.value
+                stockData.sharesOutstanding = data.defaultKeyStatistics.sharesOutstanding.value
+            }
+        )
+
+        stockDataViewModel.balanceSheetData.observe(
+            this,
+            { data ->
+                val shortLongTermDebt =
+                    data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortLongTermDebt.value
+                val longTermDebt =
+                    data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].longTermDebt.value
+                val cash =
+                    data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].cash.value
+                val shortTermInvestments =
+                    data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortTermInvestments.value
+                stockData.totalDebt = shortLongTermDebt + longTermDebt
+                stockData.cashNShortTermInvestment = cash + shortTermInvestments
+            }
+        )
+
+        stockDataViewModel.analysisData.observe(
+            this,
+            { data ->
+                stockData.growthRate = data.earningsTrend.trend[4].growth.value
+            }
+        )
+
+        stockDataViewModel.loadingAnalysisStatus.observe(
+            this,
+            { status -> loadingAnalysisStatus = status }
+        )
+
+        stockDataViewModel.loadingBalancesheetStatus.observe(
+            this,
+            { status -> loadingBalanceSheetStatus = status }
+        )
+
+        stockDataViewModel.loadingStatisticsStatus.observe(
+            this,
+            { status -> loadingStatisticsStatus = status }
+        )
+
+        while (true) {
+            if (loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
+
+                TODO("hide spinner and show main content")
+                break
+            }
+        }
+
 
 
         binding.valueOpCashflowTv.text = "$11,111 m"
