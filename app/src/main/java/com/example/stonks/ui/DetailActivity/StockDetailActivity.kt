@@ -6,12 +6,14 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewbinding.ViewBinding
 import com.example.stonks.StockDataViewModel
 import com.example.stonks.data.LoadingStatus
 import com.example.stonks.data.StockData
 import com.example.stonks.data.StockSearchItem
 import com.example.stonks.databinding.ActivityStockDetailBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class StockDetailActivity : AppCompatActivity() {
     private lateinit var stockSearchItem: StockSearchItem
@@ -66,19 +68,54 @@ class StockDetailActivity : AppCompatActivity() {
         stockDataViewModel.balanceSheetData.observe(
             this,
             { data ->
-                val shortLongTermDebt =
-                    data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortLongTermDebt.value
-                val longTermDebt =
-                    data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].longTermDebt.value
-                val cash =
-                    data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].cash.value
-//                val shortTermInvestments =
-//                    data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortTermInvestments.value
-                Log.d(TAG, "fgkfhdjskohfjds hafusdahfkjsdfhjkdshfjahfds $shortLongTermDebt, $longTermDebt, $cash, ")
-                stockData.totalDebt = shortLongTermDebt + longTermDebt
-                stockData.cashNShortTermInvestment = cash
-//                + shortTermInvestments
 
+                var shortTermInvestments = 0L
+                if (data != null) {
+                    if (data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortTermInvestments != null) {
+                        shortTermInvestments =
+                            data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortTermInvestments.value
+
+                    }
+                }
+
+
+                var shortLongTermDebt = 0L
+                var longTermDebt = 0L
+                if (data?.balanceSheetHistoryQuarterly?.balanceSheetStatements?.get(0)?.shortLongTermDebt?.value != null) {
+                    shortLongTermDebt =
+                        data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortLongTermDebt.value
+                }
+                if (data?.balanceSheetHistoryQuarterly?.balanceSheetStatements?.get(0)?.longTermDebt?.value != null) {
+                    longTermDebt =
+                        data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].longTermDebt.value
+                }
+
+
+                stockData.totalDebt = shortLongTermDebt + longTermDebt
+
+                var cash = 0L
+                if (data != null) {
+                    if (data.balanceSheetHistoryQuarterly.balanceSheetStatements.get(0).cash != null) {
+                        cash =
+                            data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].cash.value
+                    }
+                }
+                if (data != null) {
+                    if (data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortTermInvestments != null) {
+                        shortTermInvestments =
+                            data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortTermInvestments.value
+
+                    }
+                }
+                stockData.cashNShortTermInvestment = cash + shortTermInvestments
+                Log.d(
+                    TAG,
+                    "================== shortLongTermDebt, longTermDebt, cash, ShortTermInvestments: ${shortLongTermDebt}, $longTermDebt, $cash, $shortTermInvestments "
+                )
+                Log.d(
+                    TAG,
+                    "------xxxxxxxxxxxxx-------------- totalDebt, cashAndShortTermInvestments: ${stockData.totalDebt}, ${stockData.cashNShortTermInvestment} "
+                )
                 isBalanceSheetDataDone = true
             }
         )
@@ -98,22 +135,20 @@ class StockDetailActivity : AppCompatActivity() {
                 when (loadingAnalysisStatus) {
                     LoadingStatus.LOADING -> {
                         binding.analysisPbLoadingIndicator.visibility = View.VISIBLE
-
                         setAnalysisDataVisibility(View.GONE)
-
                     }
                     LoadingStatus.SUCCESS -> {
+                        Log.d(TAG, "analysis loading done")
                         binding.analysisPbLoadingIndicator.visibility = View.GONE
 
                         setAnalysisDataVisibility(View.VISIBLE)
                         binding.valueOpCashflowTv.text = "$" + String.format(
                             "%d m", stockData.curOpCashFlow!!.div(1000000)
                         )
-                        binding.valueLastCloseTv.text = "$"+ stockData.lastClose.toString()
+                        binding.valueLastCloseTv.text = "$" + stockData.lastClose.toString()
                         binding.valueNumShareTv.text = "$" + String.format(
                             "%d m", stockData.sharesOutstanding!!.div(1000000)
                         )
-
                     }
                     else -> {
                         binding.analysisPbLoadingIndicator.visibility = View.GONE
@@ -134,11 +169,11 @@ class StockDetailActivity : AppCompatActivity() {
                 when (loadingBalanceSheetStatus) {
                     LoadingStatus.LOADING -> {
                         binding.balsheetPbLoadingIndicator.visibility = View.VISIBLE
-
                         setBalanceSheetDataVisibility(View.GONE)
-
                     }
                     LoadingStatus.SUCCESS -> {
+                        Log.d(TAG, "balancesheet loading done")
+
                         binding.balsheetPbLoadingIndicator.visibility = View.GONE
 
                         setBalanceSheetDataVisibility(View.VISIBLE)
@@ -146,13 +181,10 @@ class StockDetailActivity : AppCompatActivity() {
                                 String.format(
                                     "%d m", stockData.cashNShortTermInvestment!!.div(1000000)
                                 )
-
-
-
-
                         binding.valueDebtTv.text = "$" + String.format(
                             "%d m", stockData.totalDebt!!.div(1000000)
                         )
+
                     }
                     else -> {
                         binding.balsheetPbLoadingIndicator.visibility = View.GONE
@@ -177,6 +209,8 @@ class StockDetailActivity : AppCompatActivity() {
 
                     }
                     LoadingStatus.SUCCESS -> {
+                        Log.d(TAG, "statistics loading done")
+
                         binding.statsPbLoadingIndicator.visibility = View.GONE
 
                         setStatisticsDataVisibility(View.VISIBLE)
@@ -203,14 +237,44 @@ class StockDetailActivity : AppCompatActivity() {
 //            binding.detailPbLoadingIndicator.visibility = View.GONE
 ////
 //        }
+        GlobalScope.launch {
+            while (true) {
+                delay(250L)
+                if (loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
+                    break
+                }
+            }
+
+        }
+        binding.titleDiscountRateTv.visibility = View.VISIBLE
+        binding.titleInvestmentTv.visibility = View.VISIBLE
+        binding.titleVerdictTv.visibility = View.VISIBLE
+
+        binding.valueDiscountRateTv.visibility = View.VISIBLE
+        binding.valueInvestmentTv.visibility = View.VISIBLE
+        binding.valueVerdictTv.visibility = View.VISIBLE
+
+        binding.valueDiscountRateTv.text = "$"
+        binding.valueIntrinsicTv.text = "$"
+        binding.valueVerdictTv.text = "$"
+//        var i = 0
 //        while (true) {
-//            if (loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
+//            if (i % 1000 == 0 && loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
 //
-//                TODO("hide spinner and show main content")
+//                binding.titleDiscountRateTv.visibility = View.VISIBLE
+//                binding.titleInvestmentTv.visibility = View.VISIBLE
+//                binding.titleVerdictTv.visibility = View.VISIBLE
 //
+//                binding.valueDiscountRateTv.visibility = View.VISIBLE
+//                binding.valueInvestmentTv.visibility = View.VISIBLE
+//                binding.valueVerdictTv.visibility = View.VISIBLE
 //
+//                binding.valueDiscountRateTv.text = "$"
+//                binding.valueIntrinsicTv.text = "$"
+//                binding.valueVerdictTv.text = "$"
 //                break
 //            }
+//            i++
 //        }
         //analysis Data
 //        binding.valueOpCashflowTv.text = "$" + stockData.curOpCashFlow.toString()
@@ -226,20 +290,10 @@ class StockDetailActivity : AppCompatActivity() {
 //        binding.valueGrowthRate510Tv.text = "$" + (stockData.growthRate?.div(2)).toString()
 //        binding.valueGrowthRate1120Tv.text = "$"
 
-        if (loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
-            binding.titleDiscountRateTv.visibility = View.VISIBLE
-            binding.titleInvestmentTv.visibility = View.VISIBLE
-            binding.titleVerdictTv.visibility = View.VISIBLE
-
-            binding.valueDiscountRateTv.visibility = View.VISIBLE
-            binding.valueInvestmentTv.visibility = View.VISIBLE
-            binding.valueVerdictTv.visibility = View.VISIBLE
-
-            binding.valueDiscountRateTv.text = "$"
-            binding.valueIntrinsicTv.text = "$"
-            binding.valueVerdictTv.text = "$"
-
-        }
+//        if (loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
+//
+//
+//        }
         //final
 
     }

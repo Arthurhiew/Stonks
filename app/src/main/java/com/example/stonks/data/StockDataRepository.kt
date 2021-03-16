@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class StockDataRepository {
     private val statisticsData = MutableLiveData<StatisticsResponse>()
-    private val balanceSheetData = MutableLiveData<BalanceSheetResponse>()
+    private val balanceSheetData = MutableLiveData<BalanceSheetResponse?>()
     private val analysisData = MutableLiveData<AnalysisResponse>()
     private val loadingStatisticsStatus = MutableLiveData<LoadingStatus>()
     private val loadingBalanceSheetStatus = MutableLiveData<LoadingStatus>()
@@ -45,7 +45,7 @@ class StockDataRepository {
         return statisticsData
     }
 
-    fun getBalanceSheetData(): LiveData<BalanceSheetResponse> {
+    fun getBalanceSheetData(): MutableLiveData<BalanceSheetResponse?> {
         return balanceSheetData
     }
 
@@ -130,6 +130,8 @@ class StockDataRepository {
             ) {
                 if (response.isSuccessful) {
                     statisticsData.value = response.body()
+                    loadingStatisticsStatus.value = LoadingStatus.SUCCESS
+
                     Log.d(
                         TAG,
                         "Statistics fetched done, sharesOutstanding = ${statisticsData.value?.defaultKeyStatistics?.sharesOutstanding?.value}"
@@ -152,29 +154,31 @@ class StockDataRepository {
     private fun fetchBalanceSheetData(symbol: String, region: String) {
         Log.d(TAG, "Execute new fetch? ${shouldExecuteFetch(symbol)}")
 //        if (shouldExecuteFetch(symbol)) {
-            currentSymbol = symbol
-            loadingBalanceSheetStatus.value = LoadingStatus.LOADING
-            val result = yahooApiService.getBalanceSheet(symbol, region)
-            result.enqueue(object : Callback<BalanceSheetResponse> {
-                override fun onResponse(
-                    call: Call<BalanceSheetResponse>,
-                    response: Response<BalanceSheetResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        balanceSheetData.value = response.body()
-                    } else {
-                        Log.d(TAG, "API called rejected with symbol = $symbol")
+        currentSymbol = symbol
+        loadingBalanceSheetStatus.value = LoadingStatus.LOADING
+        val result = yahooApiService.getBalanceSheet(symbol, region)
+        result.enqueue(object : Callback<BalanceSheetResponse> {
+            override fun onResponse(
+                call: Call<BalanceSheetResponse>,
+                response: Response<BalanceSheetResponse>
+            ) {
+                if (response.isSuccessful) {
+                    loadingBalanceSheetStatus.value = LoadingStatus.SUCCESS
 
-                        loadingBalanceSheetStatus.value = LoadingStatus.ERROR
-                    }
-                }
+                    balanceSheetData.value = response.body()
+                } else {
+                    Log.d(TAG, "API called rejected with symbol = $symbol")
 
-                override fun onFailure(call: Call<BalanceSheetResponse>, t: Throwable) {
-                    t.printStackTrace()
-                    Log.d(TAG, "API called failed: $symbol")
                     loadingBalanceSheetStatus.value = LoadingStatus.ERROR
                 }
-            })
+            }
+
+            override fun onFailure(call: Call<BalanceSheetResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.d(TAG, "API called failed: $symbol")
+                loadingBalanceSheetStatus.value = LoadingStatus.ERROR
+            }
+        })
 //        }
 //    else {
 //            Log.d(TAG, "using cached results for this query: $symbol")
@@ -185,29 +189,29 @@ class StockDataRepository {
     private fun fetchAnalysisData(symbol: String, region: String) {
         Log.d(TAG, "Execute new fetch? ${shouldExecuteFetch(symbol)}")
 //        if (shouldExecuteFetch(symbol)) {
-            currentSymbol = symbol
-            loadingAnalysisStatus.value = LoadingStatus.LOADING
-            val result = yahooApiService.getAnalysis(symbol, region)
-            result.enqueue(object : Callback<AnalysisResponse> {
-                override fun onResponse(
-                    call: Call<AnalysisResponse>,
-                    response: Response<AnalysisResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        analysisData.value = response.body()
-                        loadingAnalysisStatus.value = LoadingStatus.SUCCESS
-                    } else {
-                        Log.d(TAG, "API called rejected with symbol = $symbol")
-                        loadingAnalysisStatus.value = LoadingStatus.ERROR
-                    }
-                }
-
-                override fun onFailure(call: Call<AnalysisResponse>, t: Throwable) {
-                    t.printStackTrace()
-                    Log.d(TAG, "API called failed: $symbol")
+        currentSymbol = symbol
+        loadingAnalysisStatus.value = LoadingStatus.LOADING
+        val result = yahooApiService.getAnalysis(symbol, region)
+        result.enqueue(object : Callback<AnalysisResponse> {
+            override fun onResponse(
+                call: Call<AnalysisResponse>,
+                response: Response<AnalysisResponse>
+            ) {
+                if (response.isSuccessful) {
+                    analysisData.value = response.body()
+                    loadingAnalysisStatus.value = LoadingStatus.SUCCESS
+                } else {
+                    Log.d(TAG, "API called rejected with symbol = $symbol")
                     loadingAnalysisStatus.value = LoadingStatus.ERROR
                 }
-            })
+            }
+
+            override fun onFailure(call: Call<AnalysisResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.d(TAG, "API called failed: $symbol")
+                loadingAnalysisStatus.value = LoadingStatus.ERROR
+            }
+        })
 //        }
 //else {
 //            Log.d(TAG, "using cached results for this query: $symbol")
