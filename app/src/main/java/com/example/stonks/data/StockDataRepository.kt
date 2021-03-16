@@ -151,7 +151,7 @@ class StockDataRepository {
 
     private fun fetchBalanceSheetData(symbol: String, region: String) {
         Log.d(TAG, "Execute new fetch? ${shouldExecuteFetch(symbol)}")
-        if (shouldExecuteFetch(symbol)) {
+//        if (shouldExecuteFetch(symbol)) {
             currentSymbol = symbol
             loadingBalanceSheetStatus.value = LoadingStatus.LOADING
             val result = yahooApiService.getBalanceSheet(symbol, region)
@@ -175,15 +175,16 @@ class StockDataRepository {
                     loadingBalanceSheetStatus.value = LoadingStatus.ERROR
                 }
             })
-        } else {
-            Log.d(TAG, "using cached results for this query: $symbol")
-            return
-        }
+//        }
+//    else {
+//            Log.d(TAG, "using cached results for this query: $symbol")
+//            return
+//        }
     }
 
     private fun fetchAnalysisData(symbol: String, region: String) {
         Log.d(TAG, "Execute new fetch? ${shouldExecuteFetch(symbol)}")
-        if (shouldExecuteFetch(symbol)) {
+//        if (shouldExecuteFetch(symbol)) {
             currentSymbol = symbol
             loadingAnalysisStatus.value = LoadingStatus.LOADING
             val result = yahooApiService.getAnalysis(symbol, region)
@@ -207,9 +208,10 @@ class StockDataRepository {
                     loadingAnalysisStatus.value = LoadingStatus.ERROR
                 }
             })
-        } else {
-            Log.d(TAG, "using cached results for this query: $symbol")
-        }
+//        }
+//else {
+//            Log.d(TAG, "using cached results for this query: $symbol")
+//        }
     }
 
 
