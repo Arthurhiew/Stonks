@@ -12,6 +12,7 @@ import com.example.stonks.StockDataViewModel
 import com.example.stonks.data.StockData
 import com.example.stonks.data.StockSearchItem
 import com.example.stonks.databinding.ActivityStockDetailBinding
+import kotlin.math.pow
 
 class StockDetailActivity : AppCompatActivity() {
     private lateinit var stockSearchItem: StockSearchItem
@@ -21,7 +22,7 @@ class StockDetailActivity : AppCompatActivity() {
 
     private lateinit var mainContentCL: ConstraintLayout
     private lateinit var loadingPb: ProgressBar
-    private val growthRate20: Float = 4.1F + 1F //long term gdp growth rate in the US + 1%
+    private val growthRate20: Float = 0.041F + 0.01F //long term gdp growth rate in the US + 1%
     private lateinit var binding: ActivityStockDetailBinding
 
     //    private var stockData: StockData = StockData(null, null, null, null, null, null, null)
@@ -121,7 +122,7 @@ class StockDetailActivity : AppCompatActivity() {
                 binding.valueInvestmentTv.text =
                     String.format("$%d m", stockData.cashNShortTermInvestment!!.div(1000000))
 
-                
+
 
                 stockDataViewModel.incrementLoadingStatus()
                 Log.d(
@@ -173,20 +174,25 @@ class StockDetailActivity : AppCompatActivity() {
                     )
 
                     binding.valueGrowthRate15Tv.text =
-                        stockData.growthRate!!.times(100).toString() + "%"
+                        String.format("%.2f", stockData.growthRate!!.times(100)) + "%"
 
                     binding.valueGrowthRate510Tv.text =
-                        stockData.growthRate!!.times(100).div(2).toString() + "%"
-                    binding.valueGrowthRate1120Tv.text = "$growthRate20%"
+                        String.format("%.2f", stockData.growthRate!!.times(100).div(2)) + "%"
+                    binding.valueGrowthRate1120Tv.text = String.format("%.2f", growthRate20.times(100)) + "%"
 
 
                     val growthRate10 = stockData.growthRate!!.div(2)
 
-                    val discountRate = getDiscountRate(stockData.beta!!)
-                    val pV10YrCashFlow = getPV10YrCashFlow(
-                        stockData.curOpCashFlow!!.toFloat(),
-                        stockData.growthRate!!, growthRate10, growthRate20, discountRate
-                    )
+                    val discountRate = getDiscountRate(stockData.beta!!).div(100)
+
+
+
+
+//                    val pV10YrCashFlow = getPV10YrCashFlow(
+//                        80008000000F,
+//                        0.1469F, 0.0734F, growthRate20, discountRate
+//                    )
+
 
                     val debtPerShare =
                         getDebtPerShare(stockData.totalDebt!!, stockData.sharesOutstanding!!)
@@ -211,8 +217,15 @@ class StockDetailActivity : AppCompatActivity() {
 
                     val verdict = getVerdict(stockData.lastClose!!, intrinsicValue)
 
+                    Log.d(
+                        TAG,
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx discountRate:${discountRate}, pV10:${pV10YrCashFlow}, debtPS:${debtPerShare}, cashPS:${cashPerShare}, Ins before cash/debt:${intrinsicValueBeforeCashOrDebt}, final:${intrinsicValue}"
+                    )
+                    Log.d(TAG, "cccccccccccc")
+
+
                     binding.valueDiscountRateTv.text =
-                        String.format("%.2f", discountRate) + "%"
+                        String.format("%.2f", discountRate.times(100)) + "%"
                     binding.valueIntrinsicTv.text = "$" + String.format("%.2f", intrinsicValue)
 
                     if (verdict > 0) {
@@ -259,9 +272,8 @@ class StockDetailActivity : AppCompatActivity() {
         } else if (beta > 1.6F) {
             newBeta = 1.6F
         }
-        val discountRate: Float = newBeta + riskFreeRate * marKetRiskPremium
 
-        return discountRate
+        return newBeta + riskFreeRate * marKetRiskPremium
     }
 
     private fun getPV10YrCashFlow(
@@ -271,18 +283,22 @@ class StockDetailActivity : AppCompatActivity() {
         growthRate20: Float,
         discountRate: Float
     ): Float {
-        var temp = curCashFlow
+        var projectedCashFlow = curCashFlow
         var sum = 0F
+
         for (i in 0..20) {
-            val discountFactor = 1 / (1 + discountRate) * (i + 1)
-            //Before Discount
-            temp *= when {
-                i < 5 -> growthRate5
-                i < 10 -> growthRate10
-                else -> growthRate20
+            val growthR = when {
+                i < 5 -> growthRate5 +1
+                i < 10 -> growthRate10+1
+                else -> growthRate20+1
             }
-            //After discount
-            sum += temp * discountFactor
+            val discountFactor = (1 / (1 + discountRate)).pow(i + 1)
+
+            projectedCashFlow*= growthR
+            val discountedValue = projectedCashFlow *discountFactor
+
+            sum += discountedValue
+            Log.d(TAG, "${i}: discountedValue: ${projectedCashFlow}, discountFactor: ${discountFactor}, sum: ${sum}, growthR: ${growthR}")
         }
 
         return sum
@@ -293,17 +309,17 @@ class StockDetailActivity : AppCompatActivity() {
         PV10YrCashFlow: Float,
         numShare: Long
     ): Float {
-        return PV10YrCashFlow / numShare
+        return PV10YrCashFlow / numShare.toFloat()
     }
 
     private fun getDebtPerShare(totalDebt: Long, numShare: Long): Float {
 
-        return (totalDebt.div(numShare)).toFloat()
+        return (totalDebt.toFloat().div(numShare.toFloat()))
     }
 
     private fun getCashPerShare(totalInvestment: Long, numShare: Long): Float {
 
-        return (totalInvestment.div(numShare)).toFloat()
+        return (totalInvestment.toFloat().div(numShare.toFloat()))
 
     }
 
@@ -317,62 +333,6 @@ class StockDetailActivity : AppCompatActivity() {
 
     }
 
-//    private fun setAnalysisDataVisibility(status: Int) {
-//        binding.titleOpCashflowTv.visibility = status
-//        binding.valueOpCashflowTv.visibility = status
-//
-//        binding.titleLastCloseTv.visibility = status
-//        binding.valueLastCloseTv.visibility = status
-//
-//        binding.titleNumShareTv.visibility = status
-//        binding.valueNumShareTv.visibility = status
-//    }
-//
-//    private fun setBalanceSheetDataVisibility(status: Int) {
-//        binding.titleInvestmentTv.visibility = status
-//        binding.valueInvestmentTv.visibility = status
-//
-//        binding.titleDebtTv.visibility = status
-//        binding.valueDebtTv.visibility = status
-//    }
-//
-//    private fun setStatisticsDataVisibility(status: Int) {
-//        binding.titleGrowthRate15Tv.visibility = status
-//        binding.titleGrowthRate510Tv.visibility = status
-//        binding.titleGrowthRate1120Tv.visibility = status
-//
-//        binding.valueGrowthRate15Tv.visibility = status
-//        binding.valueGrowthRate510Tv.visibility = status
-//        binding.valueGrowthRate1120Tv.visibility = status
-//
-//    }
-//
-//    private fun setDetailPageVisibility(status: Int) {
-//        binding.valueVerdictTv.visibility = status
-//        binding.valueIntrinsicTv.visibility = status
-//        binding.valueLastCloseTv.visibility = status
-//        binding.valueDiscountRateTv.visibility = status
-//        binding.valueGrowthRate15Tv.visibility = status
-//        binding.valueGrowthRate510Tv.visibility = status
-//        binding.valueGrowthRate1120Tv.visibility = status
-//        binding.valueNumShareTv.visibility = status
-//        binding.valueInvestmentTv.visibility = status
-//        binding.valueDebtTv.visibility = status
-//        binding.valueOpCashflowTv.visibility = status
-//
-//
-//        binding.titleDebtTv.visibility = status
-//        binding.titleGrowthRate15Tv.visibility = status
-//        binding.titleGrowthRate510Tv.visibility = status
-//        binding.titleGrowthRate1120Tv.visibility = status
-//        binding.titleIntrinsicTv.visibility = status
-//        binding.titleInvestmentTv.visibility = status
-//        binding.titleLastCloseTv.visibility = status
-//        binding.titleNumShareTv.visibility = status
-//        binding.titleDiscountRateTv.visibility = status
-//        binding.titleOpCashflowTv.visibility = status
-//        binding.titleVerdictTv.visibility = status
-//    }
 
 }
 
