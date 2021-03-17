@@ -231,17 +231,19 @@ class StockDetailActivity : AppCompatActivity() {
                     binding.valueDiscountRateTv.text =
                         String.format("%.2f", discountRate.times(100)) + "%"
                     if (intrinsicValue < 0) {
-
                         binding.valueIntrinsicTv.text =
                             "Insufficient data needed to calculate intrinsic value"
+                        binding.valueVerdictTv.visibility = View.VISIBLE
                         binding.valueVerdictTv.text =  "Insufficient data needed to calculate intrinsic value"
                     } else {
                         stockData.intrinsicValue = intrinsicValue
                         binding.valueIntrinsicTv.text = "$" + String.format("%.2f", intrinsicValue)
                         stockData.overUnderValued = verdict
                         if (verdict > 0) {
+                            binding.redValueVerdictTv.visibility = View.VISIBLE
                             binding.redValueVerdictTv.text = "+"+String.format("%.2f", verdict) + "%"
                         }else{
+                            binding.greenValueVerdictTv.visibility = View.VISIBLE
                             binding.greenValueVerdictTv.text = String.format("%.2f", verdict) + "%"
                         }
                     }

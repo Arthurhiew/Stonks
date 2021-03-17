@@ -287,6 +287,7 @@
             android:text="@string/detail_dummy_number"
             android:textSize="16sp"
             android:textColor="@color/red"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/title_verdict_tv"
             app:layout_constraintStart_toStartOf="@+id/title_verdict_tv"
             app:layout_constraintTop_toBottomOf="@+id/title_verdict_tv" />
@@ -299,6 +300,7 @@
             android:text="@string/detail_dummy_number"
             android:textSize="16sp"
             android:textColor="@color/green"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/title_verdict_tv"
             app:layout_constraintStart_toStartOf="@+id/title_verdict_tv"
             app:layout_constraintTop_toBottomOf="@+id/title_verdict_tv" />
@@ -309,7 +311,7 @@
             android:layout_marginTop="15dp"
             android:text="@string/detail_dummy_number"
             android:textSize="16sp"
-            android:textColor="@color/green"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/title_verdict_tv"
             app:layout_constraintStart_toStartOf="@+id/title_verdict_tv"
             app:layout_constraintTop_toBottomOf="@+id/title_verdict_tv" />
@@ -328,4 +330,5 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>
+
 
