@@ -68,5 +68,14 @@
             app:layout_constraintStart_toEndOf="@+id/tvIntrinsicValue"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/ivRemoveIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_remove_circle_outline_24"
+            app:layout_constraintBottom_toBottomOf="@+id/tvOverUnderValued"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvOverUnderValued" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

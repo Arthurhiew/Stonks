@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +13,7 @@ import com.example.stonks.WatchListViewModel
 import com.example.stonks.data.StockData
 import com.example.stonks.data.StockDataAdapter
 
-class HomeFragment : Fragment(), StockDataAdapter.OnItemClickListener {
+class HomeFragment : Fragment(), StockDataAdapter.OnItemClickListener, StockDataAdapter.OnDeleteItemClickListener {
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var watchListViewModel: WatchListViewModel
@@ -47,8 +46,7 @@ class HomeFragment : Fragment(), StockDataAdapter.OnItemClickListener {
         watchListViewModel.allStockData!!.observe(viewLifecycleOwner, {
             if (it != null) {
                 watchList = it
-
-                stockDataAdapter = StockDataAdapter(watchList as MutableList<StockData>, this@HomeFragment)
+                stockDataAdapter = StockDataAdapter(watchList as MutableList<StockData>, this@HomeFragment, this@HomeFragment)
                 rvStockDataItems.adapter = stockDataAdapter
                 rvStockDataItems.layoutManager = LinearLayoutManager(context)
             }
@@ -58,6 +56,11 @@ class HomeFragment : Fragment(), StockDataAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
-        TODO("Not yet implemented")
+        println("Clicked $position")
+    }
+
+    override fun onDeleteItemClick(position: Int) {
+        // println("Trash can clicked $position")
+        watchList[position]?.let { watchListViewModel.deleteStockData(it) }
     }
 }

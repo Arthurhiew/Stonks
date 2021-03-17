@@ -10,6 +10,10 @@ class WatchListRepository(application: Application?) {
         StockDataDatabase.databaseWriteExecutor.execute { dao!!.insert(repo) }
     }
 
+    fun deleteStockData(repo: StockData) {
+        StockDataDatabase.databaseWriteExecutor.execute { dao!!.delete(repo) }
+    }
+
     val allStockData: LiveData<List<StockData?>?>?
         get() = dao!!.getAllRepos()
 

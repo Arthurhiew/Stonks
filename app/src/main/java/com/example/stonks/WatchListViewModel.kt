@@ -13,6 +13,10 @@ class WatchListViewModel(application: Application?) : AndroidViewModel(applicati
         repository.insertStockData(repo)
     }
 
+    fun deleteStockData(repo: StockData) {
+        repository.deleteStockData(repo)
+    }
+
     val allStockData: LiveData<List<StockData?>?>?
         get() = repository.allStockData
 }
