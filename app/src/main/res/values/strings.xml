@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Stonks</string>
-    <string name="title_home">Home</string>
+    <string name="title_home">Watch List</string>
     <string name="title_search">Search</string>
     <string name="title_notifications">Notifications</string>
 
@@ -19,4 +19,8 @@
     <string name="detail_dummy_number">$10,000 m</string>
 
     <string name="loading_error">Cannot execute search. Please check your internet connection</string>
+    <string name="stock_data_symbol_placeholder">TSLA</string>
+    <string name="stock_data_placeholder_price">700</string>
+    <string name="stock_data_placeholder_intrinsic_value">350</string>
+    <string name="stock_data_placeholder_over_under_valued">+50%</string>
 </resources>
