@@ -4,6 +4,7 @@ package com.example.stonks.data
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.stonks.R
@@ -11,7 +12,8 @@ import com.example.stonks.databinding.StockDataBinding
 
 class StockDataAdapter(
     private val stocks: MutableList<StockData>,
-    private val listener: OnItemClickListener
+    private val listener: OnItemClickListener,
+    private val deleteListener: OnDeleteItemClickListener
 ) : RecyclerView.Adapter<StockDataAdapter.StockDataViewHolder>() {
 
     inner class StockDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -21,9 +23,16 @@ class StockDataAdapter(
         val price : TextView = binding.tvPrice
         val intrinsicValue : TextView = binding.tvIntrinsicValue
         val overUnderValued : TextView = binding.tvOverUnderValued
+        private val deleteBtn : ImageView = binding.ivRemoveIcon
 
         init {
             itemView.setOnClickListener(this)
+            deleteBtn.setOnClickListener {
+                val position: Int = adapterPosition
+                if(position != RecyclerView.NO_POSITION) {
+                    deleteListener.onDeleteItemClick(position)
+                }
+            }
         }
 
         override fun onClick(v: View?) {
@@ -62,5 +71,9 @@ class StockDataAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
+    }
+
+    interface OnDeleteItemClickListener {
+        fun onDeleteItemClick(position: Int)
     }
 }
