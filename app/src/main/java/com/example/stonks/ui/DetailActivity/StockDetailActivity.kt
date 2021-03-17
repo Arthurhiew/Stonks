@@ -116,6 +116,13 @@ class StockDetailActivity : AppCompatActivity() {
                     TAG,
                     "------xxxxxxxxxxxxx-------------- totalDebt, cashAndShortTermInvestments: ${stockData.totalDebt}, ${stockData.cashNShortTermInvestment} "
                 )
+
+                binding.valueDebtTv.text =
+                    String.format("$%d m", stockData.totalDebt!!.div(1000000))
+
+                binding.valueInvestmentTv.text =
+                    String.format("$%d m", stockData.cashNShortTermInvestment!!.div(1000000))
+
                 isBalanceSheetDataDone = true
             }
         )
@@ -214,9 +221,11 @@ class StockDetailActivity : AppCompatActivity() {
                         binding.statsPbLoadingIndicator.visibility = View.GONE
 
                         setStatisticsDataVisibility(View.VISIBLE)
-                        binding.valueGrowthRate15Tv.text = "$" + stockData.growthRate.toString()
+                        binding.valueGrowthRate15Tv.text =
+                            stockData.growthRate!!.times(100).toString() + "%"
+
                         binding.valueGrowthRate510Tv.text =
-                            "$" + (stockData.growthRate?.div(2))
+                            stockData.growthRate!!.times(100).div(2).toString() + "%"
                         binding.valueGrowthRate1120Tv.text = "$"
                     }
                     else -> {
@@ -246,60 +255,53 @@ class StockDetailActivity : AppCompatActivity() {
             }
 
         }
+        val growthRate10 = stockData.growthRate!!.div(2)
+        val growthRate20 = 4.8 + 1 //long term gdp growth rate in the US + 1%
+
+
+
+
+        getPV10YrCashFlow(
+            stockData.curOpCashFlow,
+            stockData.growthRate!!, growthRate10, growthRate20,
+        )
+
+
         binding.titleDiscountRateTv.visibility = View.VISIBLE
-        binding.titleInvestmentTv.visibility = View.VISIBLE
+        binding.titleIntrinsicTv.visibility = View.VISIBLE
         binding.titleVerdictTv.visibility = View.VISIBLE
 
         binding.valueDiscountRateTv.visibility = View.VISIBLE
-        binding.valueInvestmentTv.visibility = View.VISIBLE
+        binding.valueIntrinsicTv.visibility = View.VISIBLE
         binding.valueVerdictTv.visibility = View.VISIBLE
 
         binding.valueDiscountRateTv.text = "$"
         binding.valueIntrinsicTv.text = "$"
         binding.valueVerdictTv.text = "$"
-//        var i = 0
-//        while (true) {
-//            if (i % 1000 == 0 && loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
-//
-//                binding.titleDiscountRateTv.visibility = View.VISIBLE
-//                binding.titleInvestmentTv.visibility = View.VISIBLE
-//                binding.titleVerdictTv.visibility = View.VISIBLE
-//
-//                binding.valueDiscountRateTv.visibility = View.VISIBLE
-//                binding.valueInvestmentTv.visibility = View.VISIBLE
-//                binding.valueVerdictTv.visibility = View.VISIBLE
-//
-//                binding.valueDiscountRateTv.text = "$"
-//                binding.valueIntrinsicTv.text = "$"
-//                binding.valueVerdictTv.text = "$"
-//                break
-//            }
-//            i++
-//        }
-        //analysis Data
-//        binding.valueOpCashflowTv.text = "$" + stockData.curOpCashFlow.toString()
-//        binding.valueLastCloseTv.text = "$"
-//        binding.valueNumShareTv.text = "$" + stockData.sharesOutstanding.toString()
 
-        //balance sheet
-//        binding.valueInvestmentTv.text = "$" + stockData.cashNShortTermInvestment.toString()
-//        binding.valueDebtTv.text = "$" + stockData.totalDebt.toString()
-
-        //statistics
-//        binding.valueGrowthRate15Tv.text = "$" + stockData.growthRate.toString()
-//        binding.valueGrowthRate510Tv.text = "$" + (stockData.growthRate?.div(2)).toString()
-//        binding.valueGrowthRate1120Tv.text = "$"
-
-//        if (loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
-//
-//
-//        }
-        //final
 
     }
 
+    private fun getDiscountRate(
+        beta: Float,
+        riskFreeRate: Float = 1.44F,
+        marKetRiskPremium: Float = 3.42F
+    ): Float {
+        var discountRate: Float
+        var newBeta = beta
+
+        if (beta < 0.8F) {
+            discountRate = 0.8F
+        } else if (beta > 1.6F) {
+            newBeta = 1.6F
+        }
+        discountRate = newBeta + riskFreeRate * marKetRiskPremium
+
+        return discountRate
+    }
+
     private fun getPV10YrCashFlow(
-        curCashFlow: Float,
+        curCashFlow: Long?,
         growthRate5: Float,
         growthRate10: Float,
         growthRate20: Float,
