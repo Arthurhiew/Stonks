@@ -6,6 +6,7 @@ data class StatisticsResponse(
     val financialData: FinancialData,
     val summaryDetail: SummaryDetail,
     val defaultKeyStatistics: DefaultKeyStatistics,
+    val beta: Beta
 )
 
 data class FinancialData(
@@ -18,12 +19,15 @@ data class OperatingCashFlow(
 )
 
 data class SummaryDetail(
-    val previousClose: PreviousClose
+    val previousClose: PreviousClose,
+    val beta:Beta
 )
+
 data class PreviousClose(
     @SerializedName("raw")
     val value: Float
 )
+
 data class DefaultKeyStatistics(
     val sharesOutstanding: SharesOutstanding
 )
@@ -31,4 +35,9 @@ data class DefaultKeyStatistics(
 data class SharesOutstanding(
     @SerializedName("raw")
     val value: Long
+)
+
+data class Beta(
+    @SerializedName("raw")
+    val value: Float
 )

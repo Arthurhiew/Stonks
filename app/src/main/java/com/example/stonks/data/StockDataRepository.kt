@@ -59,49 +59,6 @@ class StockDataRepository {
         fetchStatisticsData(symbol, region)
     }
 
-//        var shortLongTermDebt =
-//            balanceSheetData.value?.balanceSheetHistoryQuarterly?.balanceSheetStatements?.get(0)?.shortLongTermDebt?.value
-//        var longTermDebt =
-//            balanceSheetData.value?.balanceSheetHistoryQuarterly?.balanceSheetStatements?.get(0)?.longTermDebt?.value
-//        var cash =
-//            balanceSheetData.value?.balanceSheetHistoryQuarterly?.balanceSheetStatements?.get(0)?.cash?.value
-//        var shortTermInvestments =
-//            balanceSheetData.value?.balanceSheetHistoryQuarterly?.balanceSheetStatements?.get(0)?.shortTermInvestments?.value
-
-
-//        var growthRate = analysisData.value?.earningsTrend?.trend?.get(4)?.growth?.value
-//
-    ///// Statistics Data
-//        stockData.value!!.symbol = symbol
-//        stockData.value!!.curOpCashFlow = curOpCashFlow
-//        stockData.value!!.lastClose = lastClose
-//        stockData.value!!.sharesOutstanding = sharesOutstanding
-//
-//        if (shortLongTermDebt == null) {
-//            shortLongTermDebt = 0L
-//        }
-//
-//        if (longTermDebt == null) {
-//            longTermDebt = 0L
-//        }
-//
-//        if (cash == null) {
-//            cash = 0L
-//        }
-//
-//        if (shortTermInvestments == null) {
-//            shortTermInvestments = 0L
-//        }
-//
-//        if (growthRate == null) {
-//            growthRate = 0F
-//        }
-//
-//        stockData.value!!.totalDebt = shortLongTermDebt + longTermDebt
-//        stockData.value!!.cashNShortTermInvestment = cash + shortTermInvestments
-//        stockData.value!!.growthRate = growthRate
-//        return stockData
-//    }
 
     fun getLoadingStatisticsStatus(): LiveData<LoadingStatus> {
         return loadingStatisticsStatus

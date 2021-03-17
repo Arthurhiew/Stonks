@@ -24,6 +24,7 @@ class StockDetailActivity : AppCompatActivity() {
     private var loadingBalanceSheetStatus: LoadingStatus = LoadingStatus.LOADING
     private var loadingAnalysisStatus: LoadingStatus = LoadingStatus.LOADING
     private var loadingStatus: LoadingStatus = LoadingStatus.LOADING
+    private val growthRate20: Float = 4.1F + 1F //long term gdp growth rate in the US + 1%
     private lateinit var binding: ActivityStockDetailBinding
 
     //    private var stockData: StockData = StockData(null, null, null, null, null, null, null)
@@ -49,9 +50,7 @@ class StockDetailActivity : AppCompatActivity() {
         binding.valueInvestmentTv.visibility = View.GONE
         binding.valueVerdictTv.visibility = View.GONE
 
-        var isStatisticDataDone = false
-        var isBalanceSheetDataDone = false
-        var isAnalysisDataDone = false
+
         // stockdata binding here
         stockDataViewModel.statisticsData.observe(
             this,
@@ -61,7 +60,8 @@ class StockDetailActivity : AppCompatActivity() {
                 stockData.curOpCashFlow = data.financialData.operatingCashflow.value
                 stockData.lastClose = data.summaryDetail.previousClose.value
                 stockData.sharesOutstanding = data.defaultKeyStatistics.sharesOutstanding.value
-                isStatisticDataDone = true
+                stockData.beta = data.summaryDetail.beta.value
+                Log.d(TAG, "Beta value : ${stockData.beta}")
             }
         )
 
@@ -123,7 +123,6 @@ class StockDetailActivity : AppCompatActivity() {
                 binding.valueInvestmentTv.text =
                     String.format("$%d m", stockData.cashNShortTermInvestment!!.div(1000000))
 
-                isBalanceSheetDataDone = true
             }
         )
 
@@ -131,7 +130,6 @@ class StockDetailActivity : AppCompatActivity() {
             this,
             { data ->
                 stockData.growthRate = data.earningsTrend.trend[4].growth.value
-                isAnalysisDataDone = true
             }
         )
 
@@ -156,6 +154,7 @@ class StockDetailActivity : AppCompatActivity() {
                         binding.valueNumShareTv.text = "$" + String.format(
                             "%d m", stockData.sharesOutstanding!!.div(1000000)
                         )
+
                     }
                     else -> {
                         binding.analysisPbLoadingIndicator.visibility = View.GONE
@@ -226,7 +225,7 @@ class StockDetailActivity : AppCompatActivity() {
 
                         binding.valueGrowthRate510Tv.text =
                             stockData.growthRate!!.times(100).div(2).toString() + "%"
-                        binding.valueGrowthRate1120Tv.text = "$"
+                        binding.valueGrowthRate1120Tv.text = growthRate20.toString() + "%"
                     }
                     else -> {
                         binding.statsPbLoadingIndicator.visibility = View.GONE
@@ -239,13 +238,7 @@ class StockDetailActivity : AppCompatActivity() {
             }
         )
 
-//        if (isAnalysisDataDone && isBalanceSheetDataDone && isStatisticDataDone) {
-//            loadingAnalysisStatus = LoadingStatus.SUCCESS
-//            loadingBalanceSheetStatus = LoadingStatus.SUCCESS
-//            loadingStatisticsStatus = LoadingStatus.SUCCESS
-//            binding.detailPbLoadingIndicator.visibility = View.GONE
-////
-//        }
+
         GlobalScope.launch {
             while (true) {
                 delay(250L)
@@ -256,16 +249,25 @@ class StockDetailActivity : AppCompatActivity() {
 
         }
         val growthRate10 = stockData.growthRate!!.div(2)
-        val growthRate20 = 4.8 + 1 //long term gdp growth rate in the US + 1%
 
+//        val numShare = stockData.sharesOutstanding
 
+        val discountRate = getDiscountRate(stockData.beta!!)
+       val pV10YrCashFlow= getPV10YrCashFlow(
+           stockData.curOpCashFlow!!.toFloat(),
+           stockData.growthRate!!, growthRate10, growthRate20, discountRate
+       )
 
+//        val IntrinsicValueBeforeCashOrDebt = getIntrinsicValueBeforeCashOrDebt(growthRate10,numShare!!)
 
-        getPV10YrCashFlow(
-            stockData.curOpCashFlow,
-            stockData.growthRate!!, growthRate10, growthRate20,
-        )
+        val debtPerShare = getDebtPerShare(stockData.totalDebt!!, stockData.sharesOutstanding!!)
+        val cashPerShare = getCashPerShare(stockData.cashNShortTermInvestment!!, stockData.sharesOutstanding!!)
 
+        val intrinsicValueBeforeCashOrDebt = getIntrinsicValueBeforeCashOrDebt(pV10YrCashFlow, stockData.sharesOutstanding!!)
+
+        val intrinsicValue = getFinalIntrinsicValue(debtPerShare,cashPerShare,intrinsicValueBeforeCashOrDebt)
+
+        val verdict = getVerdict(stockData.lastClose!!, intrinsicValue )
 
         binding.titleDiscountRateTv.visibility = View.VISIBLE
         binding.titleIntrinsicTv.visibility = View.VISIBLE
@@ -275,33 +277,42 @@ class StockDetailActivity : AppCompatActivity() {
         binding.valueIntrinsicTv.visibility = View.VISIBLE
         binding.valueVerdictTv.visibility = View.VISIBLE
 
-        binding.valueDiscountRateTv.text = "$"
-        binding.valueIntrinsicTv.text = "$"
-        binding.valueVerdictTv.text = "$"
+        binding.valueDiscountRateTv.text = discountRate.toString() + "%"
+        binding.valueIntrinsicTv.text = "$" + intrinsicValue.toString()
+        binding.valueVerdictTv.text = "$"+verdict
 
 
+    }
+
+
+    private fun getVerdict (lastClose:Float, intrinsicValue:Float):Float{
+
+
+        var premium: Float = intrinsicValue - lastClose
+        return premium
     }
 
     private fun getDiscountRate(
         beta: Float,
         riskFreeRate: Float = 1.44F,
-        marKetRiskPremium: Float = 3.42F
-    ): Float {
-        var discountRate: Float
+        marKetRiskPremium: Float = 3.42F,
+
+        ): Float {
+
         var newBeta = beta
 
         if (beta < 0.8F) {
-            discountRate = 0.8F
+            newBeta = 0.8F
         } else if (beta > 1.6F) {
             newBeta = 1.6F
         }
-        discountRate = newBeta + riskFreeRate * marKetRiskPremium
+        val discountRate: Float = newBeta + riskFreeRate * marKetRiskPremium
 
         return discountRate
     }
 
     private fun getPV10YrCashFlow(
-        curCashFlow: Long?,
+        curCashFlow: Float,
         growthRate5: Float,
         growthRate10: Float,
         growthRate20: Float,
@@ -322,6 +333,33 @@ class StockDetailActivity : AppCompatActivity() {
         }
 
         return sum
+
+    }
+    private fun getIntrinsicValueBeforeCashOrDebt(
+        PV10YrCashFlow: Float,
+        numShare: Long
+    ): Float {
+        return PV10YrCashFlow / numShare
+    }
+
+    private fun getDebtPerShare(totalDebt: Long, numShare: Long): Float {
+
+        return (totalDebt / numShare).toFloat()
+    }
+
+    private fun getCashPerShare(totalInvestment: Long, numShare: Long): Float {
+        return (totalInvestment / numShare).toFloat()
+
+    }
+
+
+
+    private fun getFinalIntrinsicValue(
+        debtPerShare: Float,
+        cashPerShare: Float,
+        intrinsicValueBeforeCashOrDebt: Float
+    ): Float {
+        return intrinsicValueBeforeCashOrDebt + cashPerShare - debtPerShare
 
     }
 
@@ -382,31 +420,5 @@ class StockDetailActivity : AppCompatActivity() {
         binding.titleVerdictTv.visibility = status
     }
 
-    private fun getDebtPerShare(totalDebt: Long, numShare: Long): Float {
-
-        return (totalDebt / numShare).toFloat()
-    }
-
-    private fun getCashPerShare(totalInvestment: Long, numShare: Long): Float {
-        return (totalInvestment / numShare).toFloat()
-
-    }
-
-    private fun getIntrinsicValueBeforeCashOrDebt(
-        PV10YrCashFlow: Float,
-        numShare: Long
-    ): Float {
-        return PV10YrCashFlow / numShare
-    }
-
-
-    fun getFinalIntrinsicValue(
-        debtPerShare: Float,
-        cashPerShare: Float,
-        intrinsicValueBeforeCashOrDebt: Float
-    ): Float {
-        return intrinsicValueBeforeCashOrDebt + cashPerShare - debtPerShare
-
-    }
 }
 
