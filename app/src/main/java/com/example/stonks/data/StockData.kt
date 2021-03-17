@@ -43,9 +43,13 @@ data class StockData(
     var intrinsicValue: Float? = 0F,
 
     @ColumnInfo(name = "overUnderValued")
-    var overUnderValued: Float? = 0F
+    var overUnderValued: Float? = 0F,
+
+    @Ignore
+    var beta: Float? = 0F
+
 ) : Serializable {
-    constructor():this(
+    constructor() : this(
         symbol = "",
         curOpCashFlow = 0L,
         lastClose = 0F,
@@ -54,7 +58,9 @@ data class StockData(
         cashNShortTermInvestment = 0L,
         growthRate = 0F,
         intrinsicValue = 0F,
-        overUnderValued = 0F
+        overUnderValued = 0F,
+        beta = 0F
+
     )
 }
 
