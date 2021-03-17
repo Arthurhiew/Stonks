@@ -178,7 +178,8 @@ class StockDetailActivity : AppCompatActivity() {
 
                     binding.valueGrowthRate510Tv.text =
                         String.format("%.2f", stockData.growthRate!!.times(100).div(2)) + "%"
-                    binding.valueGrowthRate1120Tv.text = String.format("%.2f", growthRate20.times(100)) + "%"
+                    binding.valueGrowthRate1120Tv.text =
+                        String.format("%.2f", growthRate20.times(100)) + "%"
 
 
                     val growthRate10 = stockData.growthRate!!.div(2)
@@ -222,18 +223,34 @@ class StockDetailActivity : AppCompatActivity() {
                         TAG,
                         "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx discountRate:${discountRate}, pV10:${pV10YrCashFlow}, debtPS:${debtPerShare}, cashPS:${cashPerShare}, Ins before cash/debt:${intrinsicValueBeforeCashOrDebt}, final:${intrinsicValue}"
                     )
-                    Log.d(TAG, "cccccccccccc")
+
+                    binding.symbolTv.text = stockData.symbol
+
 
 
                     binding.valueDiscountRateTv.text =
                         String.format("%.2f", discountRate.times(100)) + "%"
-                    binding.valueIntrinsicTv.text = "$" + String.format("%.2f", intrinsicValue)
+                    if (intrinsicValue < 0) {
 
-                    if (verdict > 0) {
-                        binding.valueVerdictTv.text = "$+" + String.format("%.2f", verdict)
+                        binding.valueIntrinsicTv.text =
+                            "Insufficient data needed to calculate intrinsic value"
+                        binding.valueVerdictTv.text =  "Insufficient data needed to calculate intrinsic value"
                     } else {
-                        binding.valueVerdictTv.text = "$" + String.format("%.2f", verdict)
+                        stockData.intrinsicValue = intrinsicValue
+                        binding.valueIntrinsicTv.text = "$" + String.format("%.2f", intrinsicValue)
+                        stockData.overUnderValued = verdict
+                        if (verdict > 0) {
+                            binding.valueVerdictTv.text = "+"+String.format("%.2f", verdict) + "%"
+                        }else{
+                            binding.valueVerdictTv.text = String.format("%.2f", verdict) + "%"
+                        }
                     }
+
+//                    if (verdict > 0) {
+//                        binding.valueVerdictTv.text = "$+" + String.format("%.2f", verdict)
+//                    } else {
+//                        binding.valueVerdictTv.text = "$" + String.format("%.2f", verdict)
+//                    }
 
                     // All calculations have been done
 
@@ -256,7 +273,7 @@ class StockDetailActivity : AppCompatActivity() {
 
 
     private fun getVerdict(lastClose: Float, intrinsicValue: Float): Float {
-        return lastClose - intrinsicValue
+        return ((lastClose - intrinsicValue) / intrinsicValue) * 100
     }
 
     private fun getDiscountRate(
@@ -289,17 +306,20 @@ class StockDetailActivity : AppCompatActivity() {
 
         for (i in 0..20) {
             val growthR = when {
-                i < 5 -> growthRate5 +1
-                i < 10 -> growthRate10+1
-                else -> growthRate20+1
+                i < 5 -> growthRate5 + 1
+                i < 10 -> growthRate10 + 1
+                else -> growthRate20 + 1
             }
             val discountFactor = (1 / (1 + discountRate)).pow(i + 1)
 
-            projectedCashFlow*= growthR
-            val discountedValue = projectedCashFlow *discountFactor
+            projectedCashFlow *= growthR
+            val discountedValue = projectedCashFlow * discountFactor
 
             sum += discountedValue
-            Log.d(TAG, "${i}: discountedValue: ${projectedCashFlow}, discountFactor: ${discountFactor}, sum: ${sum}, growthR: ${growthR}")
+            Log.d(
+                TAG,
+                "${i}: discountedValue: ${projectedCashFlow}, discountFactor: ${discountFactor}, sum: ${sum}, growthR: ${growthR}"
+            )
         }
 
         return sum
