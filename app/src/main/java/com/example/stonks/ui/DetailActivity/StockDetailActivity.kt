@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import com.example.stonks.StockDataViewModel
-import com.example.stonks.data.LoadingStatus
 import com.example.stonks.data.StockData
 import com.example.stonks.data.StockSearchItem
 import com.example.stonks.databinding.ActivityStockDetailBinding
@@ -17,10 +18,9 @@ class StockDetailActivity : AppCompatActivity() {
     private val TAG = StockDetailActivity::class.java.simpleName
     private lateinit var stockDataViewModel: StockDataViewModel
     private var stockData: StockData = StockData()
-    private var loadingStatisticsStatus: LoadingStatus = LoadingStatus.LOADING
-    private var loadingBalanceSheetStatus: LoadingStatus = LoadingStatus.LOADING
-    private var loadingAnalysisStatus: LoadingStatus = LoadingStatus.LOADING
-    private var loadingStatus: LoadingStatus = LoadingStatus.LOADING
+
+    private lateinit var mainContentCL: ConstraintLayout
+    private lateinit var loadingPb: ProgressBar
     private val growthRate20: Float = 4.1F + 1F //long term gdp growth rate in the US + 1%
     private lateinit var binding: ActivityStockDetailBinding
 
@@ -39,15 +39,10 @@ class StockDetailActivity : AppCompatActivity() {
             stockSearchItem = intent.getSerializableExtra("searchResultItem") as StockSearchItem
             stockDataViewModel.loadStockData(stockSearchItem.symbol, "US")
         }
-        setDetailPageVisibility(View.GONE)
-        binding.titleDiscountRateTv.visibility = View.GONE
-        binding.titleInvestmentTv.visibility = View.GONE
-        binding.titleVerdictTv.visibility = View.GONE
-        binding.valueDiscountRateTv.visibility = View.GONE
-        binding.valueInvestmentTv.visibility = View.GONE
-        binding.valueVerdictTv.visibility = View.GONE
-
-
+        mainContentCL = binding.mainContentCl
+        loadingPb = binding.spinnerPb
+        loadingPb.visibility = View.VISIBLE
+        loadingPb.visibility = View.GONE
         // stockdata binding here
         stockDataViewModel.statisticsData.observe(
             this,
@@ -58,6 +53,12 @@ class StockDetailActivity : AppCompatActivity() {
                 stockData.lastClose = data.summaryDetail.previousClose.value
                 stockData.sharesOutstanding = data.defaultKeyStatistics.sharesOutstanding.value
                 stockData.beta = data.summaryDetail.beta.value
+                stockDataViewModel.incrementLoadingStatus()
+                Log.d(
+                    TAG,
+                    "Done with statistics, loadingStatus = ${stockDataViewModel.getLoadingStatus().value}"
+                )
+
                 Log.d(TAG, "Beta value : ${stockData.beta}")
             }
         )
@@ -120,6 +121,15 @@ class StockDetailActivity : AppCompatActivity() {
                 binding.valueInvestmentTv.text =
                     String.format("$%d m", stockData.cashNShortTermInvestment!!.div(1000000))
 
+                
+
+                stockDataViewModel.incrementLoadingStatus()
+                Log.d(
+                    TAG,
+                    "Done with balancesheet, loadingStatus = ${stockDataViewModel.getLoadingStatus().value}"
+                )
+
+
             }
         )
 
@@ -127,233 +137,47 @@ class StockDetailActivity : AppCompatActivity() {
             this,
             { data ->
                 stockData.growthRate = data.earningsTrend.trend[4].growth.value
+                stockDataViewModel.incrementLoadingStatus()
+                Log.d(
+                    TAG,
+                    "Done with Analysis, loadingStatus = ${stockDataViewModel.getLoadingStatus().value}"
+                )
+
+
             }
         )
 
 
 
-//        stockDataViewModel.loadingAnalysisStatus.observe(
-//            this,
-//            { status ->
-//                loadingAnalysisStatus = status
-//                when (loadingAnalysisStatus) {
-//                    LoadingStatus.LOADING -> {
-//                        binding.analysisPbLoadingIndicator.visibility = View.VISIBLE
-//                        setAnalysisDataVisibility(View.GONE)
-//                    }
-//                    LoadingStatus.SUCCESS -> {
-//                        Log.d(TAG, "analysis loading done")
-//                        binding.analysisPbLoadingIndicator.visibility = View.GONE
-//
-//
-//                        setStatisticsDataVisibility(View.VISIBLE)
-//                        binding.valueGrowthRate15Tv.text =
-//                            stockData.growthRate!!.times(100).toString() + "%"
-//
-//                        binding.valueGrowthRate510Tv.text =
-//                            stockData.growthRate!!.times(100).div(2).toString() + "%"
-//                        binding.valueGrowthRate1120Tv.text = "$growthRate20%"
-//
-//                    }
-//                    else -> {
-//                        binding.analysisPbLoadingIndicator.visibility = View.GONE
-//
-//                        setAnalysisDataVisibility(View.GONE)
-//
-//
-//                    }
-//                }
-//            }
-//        )
-//
-//        stockDataViewModel.loadingBalancesheetStatus.observe(
-//            this,
-//            { status ->
-//                loadingBalanceSheetStatus = status
-//
-//                when (loadingBalanceSheetStatus) {
-//                    LoadingStatus.LOADING -> {
-//                        binding.balsheetPbLoadingIndicator.visibility = View.VISIBLE
-//                        setBalanceSheetDataVisibility(View.GONE)
-//                    }
-//                    LoadingStatus.SUCCESS -> {
-//                        Log.d(TAG, "balancesheet loading done")
-//
-//                        binding.balsheetPbLoadingIndicator.visibility = View.GONE
-//
-//                        setBalanceSheetDataVisibility(View.VISIBLE)
-//                        binding.valueInvestmentTv.text = "$" +
-//                                String.format(
-//                                    "%d m", stockData.cashNShortTermInvestment!!.div(1000000)
-//                                )
-//                        binding.valueDebtTv.text = "$" + String.format(
-//                            "%d m", stockData.totalDebt!!.div(1000000)
-//                        )
-//
-//                    }
-//                    else -> {
-//                        binding.balsheetPbLoadingIndicator.visibility = View.GONE
-//
-//                        setBalanceSheetDataVisibility(View.GONE)
-//
-//
-//                    }
-//                }
-//            }
-//        )
-//
-//        stockDataViewModel.loadingStatisticsStatus.observe(
-//            this,
-//            { status ->
-//                loadingStatisticsStatus = status
-//                when (loadingStatisticsStatus) {
-//                    LoadingStatus.LOADING -> {
-//                        binding.statsPbLoadingIndicator.visibility = View.VISIBLE
-//
-//                        setStatisticsDataVisibility(View.GONE)
-//
-//                    }
-//                    LoadingStatus.SUCCESS -> {
-//                        Log.d(TAG, "====== growth rate: ${stockData.growthRate}")
-//
-//                        binding.statsPbLoadingIndicator.visibility = View.GONE
-//
-//
-//                        setAnalysisDataVisibility(View.VISIBLE)
-//                        binding.valueOpCashflowTv.text = "$" + String.format(
-//                            "%d m", stockData.curOpCashFlow!!.div(1000000)
-//                        )
-//                        binding.valueLastCloseTv.text = "$" + stockData.lastClose.toString()
-//                        binding.valueNumShareTv.text = "$" + String.format(
-//                            "%d m", stockData.sharesOutstanding!!.div(1000000)
-//                        )
-//
-//
-//                    }
-//                    else -> {
-//                        binding.statsPbLoadingIndicator.visibility = View.GONE
-//
-//                        setStatisticsDataVisibility(View.GONE)
-//
-//
-//                    }
-//                }
-//            }
-//        )
-
         stockDataViewModel.loadingStatus.observe(
             this,
             { status ->
+//                if all data is loaded
                 if (status == 3) {
+                    Log.d(TAG, "status == 3")
 
+                    binding.valueOpCashflowTv.text = "$" + String.format(
+                        "%d m", stockData.curOpCashFlow!!.div(1000000)
+                    )
+                    binding.valueLastCloseTv.text = "$" + stockData.lastClose.toString()
+                    binding.valueNumShareTv.text = "$" + String.format(
+                        "%d m", stockData.sharesOutstanding!!.div(1000000)
+                    )
 
-
-                    when (loadingStatisticsStatus) {
-                        LoadingStatus.LOADING -> {
-                            binding.statsPbLoadingIndicator.visibility = View.VISIBLE
-
-                            setStatisticsDataVisibility(View.GONE)
-
-                        }
-                        LoadingStatus.SUCCESS -> {
-                            Log.d(TAG, "====== growth rate: ${stockData.growthRate}")
-
-                            binding.statsPbLoadingIndicator.visibility = View.GONE
-
-
-                            setAnalysisDataVisibility(View.VISIBLE)
-                            binding.valueOpCashflowTv.text = "$" + String.format(
-                                "%d m", stockData.curOpCashFlow!!.div(1000000)
+                    binding.valueInvestmentTv.text = "$" +
+                            String.format(
+                                "%d m", stockData.cashNShortTermInvestment!!.div(1000000)
                             )
-                            binding.valueLastCloseTv.text = "$" + stockData.lastClose.toString()
-                            binding.valueNumShareTv.text = "$" + String.format(
-                                "%d m", stockData.sharesOutstanding!!.div(1000000)
-                            )
+                    binding.valueDebtTv.text = "$" + String.format(
+                        "%d m", stockData.totalDebt!!.div(1000000)
+                    )
 
+                    binding.valueGrowthRate15Tv.text =
+                        stockData.growthRate!!.times(100).toString() + "%"
 
-                        }
-                        else -> {
-                            binding.statsPbLoadingIndicator.visibility = View.GONE
-
-                            setStatisticsDataVisibility(View.GONE)
-
-
-                        }
-                    }
-
-
-
-
-
-                    when (loadingBalanceSheetStatus) {
-                        LoadingStatus.LOADING -> {
-                            binding.balsheetPbLoadingIndicator.visibility = View.VISIBLE
-                            setBalanceSheetDataVisibility(View.GONE)
-                        }
-                        LoadingStatus.SUCCESS -> {
-                            Log.d(TAG, "balancesheet loading done")
-
-                            binding.balsheetPbLoadingIndicator.visibility = View.GONE
-
-                            setBalanceSheetDataVisibility(View.VISIBLE)
-                            binding.valueInvestmentTv.text = "$" +
-                                    String.format(
-                                        "%d m", stockData.cashNShortTermInvestment!!.div(1000000)
-                                    )
-                            binding.valueDebtTv.text = "$" + String.format(
-                                "%d m", stockData.totalDebt!!.div(1000000)
-                            )
-
-                        }
-                        else -> {
-                            binding.balsheetPbLoadingIndicator.visibility = View.GONE
-
-                            setBalanceSheetDataVisibility(View.GONE)
-
-
-                        }
-                    }
-
-
-
-                    when (loadingAnalysisStatus) {
-                        LoadingStatus.LOADING -> {
-                            binding.analysisPbLoadingIndicator.visibility = View.VISIBLE
-                            setAnalysisDataVisibility(View.GONE)
-                        }
-                        LoadingStatus.SUCCESS -> {
-                            Log.d(TAG, "analysis loading done")
-                            binding.analysisPbLoadingIndicator.visibility = View.GONE
-
-
-                            setStatisticsDataVisibility(View.VISIBLE)
-                            binding.valueGrowthRate15Tv.text =
-                                stockData.growthRate!!.times(100).toString() + "%"
-
-                            binding.valueGrowthRate510Tv.text =
-                                stockData.growthRate!!.times(100).div(2).toString() + "%"
-                            binding.valueGrowthRate1120Tv.text = "$growthRate20%"
-
-                        }
-                        else -> {
-                            binding.analysisPbLoadingIndicator.visibility = View.GONE
-
-                            setAnalysisDataVisibility(View.GONE)
-
-
-                        }
-                    }
-
-
-
-
-
-
-
-
-
-
-
+                    binding.valueGrowthRate510Tv.text =
+                        stockData.growthRate!!.times(100).div(2).toString() + "%"
+                    binding.valueGrowthRate1120Tv.text = "$growthRate20%"
 
 
                     val growthRate10 = stockData.growthRate!!.div(2)
@@ -387,14 +211,6 @@ class StockDetailActivity : AppCompatActivity() {
 
                     val verdict = getVerdict(stockData.lastClose!!, intrinsicValue)
 
-                    binding.titleDiscountRateTv.visibility = View.VISIBLE
-                    binding.titleIntrinsicTv.visibility = View.VISIBLE
-                    binding.titleVerdictTv.visibility = View.VISIBLE
-
-                    binding.valueDiscountRateTv.visibility = View.VISIBLE
-                    binding.valueIntrinsicTv.visibility = View.VISIBLE
-                    binding.valueVerdictTv.visibility = View.VISIBLE
-
                     binding.valueDiscountRateTv.text =
                         String.format("%.2f", discountRate) + "%"
                     binding.valueIntrinsicTv.text = "$" + String.format("%.2f", intrinsicValue)
@@ -405,7 +221,20 @@ class StockDetailActivity : AppCompatActivity() {
                         binding.valueVerdictTv.text = "$" + String.format("%.2f", verdict)
                     }
 
+                    // All calculations have been done
 
+                    Log.d(
+                        TAG,
+                        "opcashflow: ${stockData.curOpCashFlow}, cashInvestments: ${stockData.cashNShortTermInvestment}, totalDebt: ${stockData.totalDebt}, numShares: ${stockData.sharesOutstanding}, growth rate: ${stockData.growthRate}"
+                    )
+
+                    loadingPb.visibility = View.GONE
+                    mainContentCL.visibility = View.VISIBLE
+
+                } else if (status < 3) {
+                    Log.d(TAG, "status < 3")
+                    loadingPb.visibility = View.VISIBLE
+                    mainContentCL.visibility = View.GONE
                 }
             }
         )
@@ -488,62 +317,62 @@ class StockDetailActivity : AppCompatActivity() {
 
     }
 
-    private fun setAnalysisDataVisibility(status: Int) {
-        binding.titleOpCashflowTv.visibility = status
-        binding.valueOpCashflowTv.visibility = status
-
-        binding.titleLastCloseTv.visibility = status
-        binding.valueLastCloseTv.visibility = status
-
-        binding.titleNumShareTv.visibility = status
-        binding.valueNumShareTv.visibility = status
-    }
-
-    private fun setBalanceSheetDataVisibility(status: Int) {
-        binding.titleInvestmentTv.visibility = status
-        binding.valueInvestmentTv.visibility = status
-
-        binding.titleDebtTv.visibility = status
-        binding.valueDebtTv.visibility = status
-    }
-
-    private fun setStatisticsDataVisibility(status: Int) {
-        binding.titleGrowthRate15Tv.visibility = status
-        binding.titleGrowthRate510Tv.visibility = status
-        binding.titleGrowthRate1120Tv.visibility = status
-
-        binding.valueGrowthRate15Tv.visibility = status
-        binding.valueGrowthRate510Tv.visibility = status
-        binding.valueGrowthRate1120Tv.visibility = status
-
-    }
-
-    private fun setDetailPageVisibility(status: Int) {
-        binding.valueVerdictTv.visibility = status
-        binding.valueIntrinsicTv.visibility = status
-        binding.valueLastCloseTv.visibility = status
-        binding.valueDiscountRateTv.visibility = status
-        binding.valueGrowthRate15Tv.visibility = status
-        binding.valueGrowthRate510Tv.visibility = status
-        binding.valueGrowthRate1120Tv.visibility = status
-        binding.valueNumShareTv.visibility = status
-        binding.valueInvestmentTv.visibility = status
-        binding.valueDebtTv.visibility = status
-        binding.valueOpCashflowTv.visibility = status
-
-
-        binding.titleDebtTv.visibility = status
-        binding.titleGrowthRate15Tv.visibility = status
-        binding.titleGrowthRate510Tv.visibility = status
-        binding.titleGrowthRate1120Tv.visibility = status
-        binding.titleIntrinsicTv.visibility = status
-        binding.titleInvestmentTv.visibility = status
-        binding.titleLastCloseTv.visibility = status
-        binding.titleNumShareTv.visibility = status
-        binding.titleDiscountRateTv.visibility = status
-        binding.titleOpCashflowTv.visibility = status
-        binding.titleVerdictTv.visibility = status
-    }
+//    private fun setAnalysisDataVisibility(status: Int) {
+//        binding.titleOpCashflowTv.visibility = status
+//        binding.valueOpCashflowTv.visibility = status
+//
+//        binding.titleLastCloseTv.visibility = status
+//        binding.valueLastCloseTv.visibility = status
+//
+//        binding.titleNumShareTv.visibility = status
+//        binding.valueNumShareTv.visibility = status
+//    }
+//
+//    private fun setBalanceSheetDataVisibility(status: Int) {
+//        binding.titleInvestmentTv.visibility = status
+//        binding.valueInvestmentTv.visibility = status
+//
+//        binding.titleDebtTv.visibility = status
+//        binding.valueDebtTv.visibility = status
+//    }
+//
+//    private fun setStatisticsDataVisibility(status: Int) {
+//        binding.titleGrowthRate15Tv.visibility = status
+//        binding.titleGrowthRate510Tv.visibility = status
+//        binding.titleGrowthRate1120Tv.visibility = status
+//
+//        binding.valueGrowthRate15Tv.visibility = status
+//        binding.valueGrowthRate510Tv.visibility = status
+//        binding.valueGrowthRate1120Tv.visibility = status
+//
+//    }
+//
+//    private fun setDetailPageVisibility(status: Int) {
+//        binding.valueVerdictTv.visibility = status
+//        binding.valueIntrinsicTv.visibility = status
+//        binding.valueLastCloseTv.visibility = status
+//        binding.valueDiscountRateTv.visibility = status
+//        binding.valueGrowthRate15Tv.visibility = status
+//        binding.valueGrowthRate510Tv.visibility = status
+//        binding.valueGrowthRate1120Tv.visibility = status
+//        binding.valueNumShareTv.visibility = status
+//        binding.valueInvestmentTv.visibility = status
+//        binding.valueDebtTv.visibility = status
+//        binding.valueOpCashflowTv.visibility = status
+//
+//
+//        binding.titleDebtTv.visibility = status
+//        binding.titleGrowthRate15Tv.visibility = status
+//        binding.titleGrowthRate510Tv.visibility = status
+//        binding.titleGrowthRate1120Tv.visibility = status
+//        binding.titleIntrinsicTv.visibility = status
+//        binding.titleInvestmentTv.visibility = status
+//        binding.titleLastCloseTv.visibility = status
+//        binding.titleNumShareTv.visibility = status
+//        binding.titleDiscountRateTv.visibility = status
+//        binding.titleOpCashflowTv.visibility = status
+//        binding.titleVerdictTv.visibility = status
+//    }
 
 }
 
