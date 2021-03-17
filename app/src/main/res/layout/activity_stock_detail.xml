@@ -225,7 +225,7 @@
             android:id="@+id/title_last_close_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="112dp"
+            android:layout_marginStart="120dp"
             android:layout_marginTop="28dp"
             android:text="@string/detail_last_close"
             android:textSize="16sp"
