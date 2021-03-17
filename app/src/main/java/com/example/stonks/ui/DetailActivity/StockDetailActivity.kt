@@ -184,9 +184,10 @@ class StockDetailActivity : AppCompatActivity() {
                     val growthRate10 = stockData.growthRate!!.div(2)
 
                     val discountRate = getDiscountRate(stockData.beta!!).div(100)
-
-
-
+                    val pV10YrCashFlow = getPV10YrCashFlow(
+                        stockData.curOpCashFlow!!.toFloat(),
+                        stockData.growthRate!!, growthRate10, growthRate20, discountRate
+                    )
 
 //                    val pV10YrCashFlow = getPV10YrCashFlow(
 //                        80008000000F,
