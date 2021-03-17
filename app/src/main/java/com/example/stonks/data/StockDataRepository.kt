@@ -18,13 +18,14 @@ class StockDataRepository {
     private val loadingStatisticsStatus = MutableLiveData<LoadingStatus>()
     private val loadingBalanceSheetStatus = MutableLiveData<LoadingStatus>()
     private val loadingAnalysisStatus = MutableLiveData<LoadingStatus>()
-    private val loadingStatus = MutableLiveData<LoadingStatus>()
+    private var loadingStatus = MutableLiveData<Int>()
     private var currentSymbol: String? = null
     private val yahooApiService: YahooApiService
     private val TAG = StockDataRepository::class.java.simpleName
     private val BASE_URL = "https://apidojo-yahoo-finance-v1.p.rapidapi.com"
 
     init {
+        loadingStatus.value = 0
         loadingStatisticsStatus.value = LoadingStatus.SUCCESS
         loadingBalanceSheetStatus.value = LoadingStatus.SUCCESS
         loadingAnalysisStatus.value = LoadingStatus.SUCCESS
@@ -37,7 +38,7 @@ class StockDataRepository {
         yahooApiService = retrofit.create(YahooApiService::class.java)
     }
 
-    fun getLoadingStatus(): LiveData<LoadingStatus> {
+    fun getLoadingStatus(): LiveData<Int> {
         return loadingStatus
     }
 
@@ -88,7 +89,7 @@ class StockDataRepository {
                 if (response.isSuccessful) {
                     statisticsData.value = response.body()
                     loadingStatisticsStatus.value = LoadingStatus.SUCCESS
-
+                    loadingStatus.value = loadingStatus.value?.plus(1)
                     Log.d(
                         TAG,
                         "Statistics fetched done, sharesOutstanding = ${statisticsData.value?.defaultKeyStatistics?.sharesOutstanding?.value}"
@@ -121,7 +122,7 @@ class StockDataRepository {
             ) {
                 if (response.isSuccessful) {
                     loadingBalanceSheetStatus.value = LoadingStatus.SUCCESS
-
+                    loadingStatus.value = loadingStatus.value?.plus(1)
                     balanceSheetData.value = response.body()
                 } else {
                     Log.d(TAG, "API called rejected with symbol = $symbol")
@@ -155,6 +156,7 @@ class StockDataRepository {
                 response: Response<AnalysisResponse>
             ) {
                 if (response.isSuccessful) {
+                    loadingStatus.value = loadingStatus.value?.plus(1)
                     analysisData.value = response.body()
                     loadingAnalysisStatus.value = LoadingStatus.SUCCESS
                 } else {

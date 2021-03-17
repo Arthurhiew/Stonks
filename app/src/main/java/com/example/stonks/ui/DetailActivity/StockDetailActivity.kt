@@ -11,9 +11,6 @@ import com.example.stonks.data.LoadingStatus
 import com.example.stonks.data.StockData
 import com.example.stonks.data.StockSearchItem
 import com.example.stonks.databinding.ActivityStockDetailBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class StockDetailActivity : AppCompatActivity() {
     private lateinit var stockSearchItem: StockSearchItem
@@ -133,6 +130,62 @@ class StockDetailActivity : AppCompatActivity() {
             }
         )
 
+        stockDataViewModel.loadingStatus.observe(
+            this,
+            { status ->
+                if (status == 3) {
+
+                    val growthRate10 = stockData.growthRate!!.div(2)
+
+//        val numShare = stockData.sharesOutstanding
+
+                    val discountRate = getDiscountRate(stockData.beta!!)
+                    val pV10YrCashFlow = getPV10YrCashFlow(
+                        stockData.curOpCashFlow!!.toFloat(),
+                        stockData.growthRate!!, growthRate10, growthRate20, discountRate
+                    )
+
+//        val IntrinsicValueBeforeCashOrDebt = getIntrinsicValueBeforeCashOrDebt(growthRate10,numShare!!)
+
+                    val debtPerShare =
+                        getDebtPerShare(stockData.totalDebt!!, stockData.sharesOutstanding!!)
+                    val cashPerShare =
+                        getCashPerShare(
+                            stockData.cashNShortTermInvestment!!,
+                            stockData.sharesOutstanding!!
+                        )
+
+                    val intrinsicValueBeforeCashOrDebt =
+                        getIntrinsicValueBeforeCashOrDebt(
+                            pV10YrCashFlow,
+                            stockData.sharesOutstanding!!
+                        )
+
+                    val intrinsicValue =
+                        getFinalIntrinsicValue(
+                            debtPerShare,
+                            cashPerShare,
+                            intrinsicValueBeforeCashOrDebt
+                        )
+
+                    val verdict = getVerdict(stockData.lastClose!!, intrinsicValue)
+
+                    binding.titleDiscountRateTv.visibility = View.VISIBLE
+                    binding.titleIntrinsicTv.visibility = View.VISIBLE
+                    binding.titleVerdictTv.visibility = View.VISIBLE
+
+                    binding.valueDiscountRateTv.visibility = View.VISIBLE
+                    binding.valueIntrinsicTv.visibility = View.VISIBLE
+                    binding.valueVerdictTv.visibility = View.VISIBLE
+
+                    binding.valueDiscountRateTv.text = discountRate.toString() + "%"
+                    binding.valueIntrinsicTv.text = "$" + intrinsicValue.toString()
+                    binding.valueVerdictTv.text = "$" + verdict
+
+                }
+            }
+        )
+
         stockDataViewModel.loadingAnalysisStatus.observe(
             this,
             { status ->
@@ -215,7 +268,7 @@ class StockDetailActivity : AppCompatActivity() {
 
                     }
                     LoadingStatus.SUCCESS -> {
-                        Log.d(TAG, "statistics loading done")
+                        Log.d(TAG, "====== growth rate: ${stockData.growthRate}")
 
                         binding.statsPbLoadingIndicator.visibility = View.GONE
 
@@ -225,7 +278,7 @@ class StockDetailActivity : AppCompatActivity() {
 
                         binding.valueGrowthRate510Tv.text =
                             stockData.growthRate!!.times(100).div(2).toString() + "%"
-                        binding.valueGrowthRate1120Tv.text = growthRate20.toString() + "%"
+                        binding.valueGrowthRate1120Tv.text = "$growthRate20%"
                     }
                     else -> {
                         binding.statsPbLoadingIndicator.visibility = View.GONE
@@ -239,53 +292,20 @@ class StockDetailActivity : AppCompatActivity() {
         )
 
 
-        GlobalScope.launch {
-            while (true) {
-                delay(250L)
-                if (loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
-                    break
-                }
-            }
-
-        }
-        val growthRate10 = stockData.growthRate!!.div(2)
-
-//        val numShare = stockData.sharesOutstanding
-
-        val discountRate = getDiscountRate(stockData.beta!!)
-       val pV10YrCashFlow= getPV10YrCashFlow(
-           stockData.curOpCashFlow!!.toFloat(),
-           stockData.growthRate!!, growthRate10, growthRate20, discountRate
-       )
-
-//        val IntrinsicValueBeforeCashOrDebt = getIntrinsicValueBeforeCashOrDebt(growthRate10,numShare!!)
-
-        val debtPerShare = getDebtPerShare(stockData.totalDebt!!, stockData.sharesOutstanding!!)
-        val cashPerShare = getCashPerShare(stockData.cashNShortTermInvestment!!, stockData.sharesOutstanding!!)
-
-        val intrinsicValueBeforeCashOrDebt = getIntrinsicValueBeforeCashOrDebt(pV10YrCashFlow, stockData.sharesOutstanding!!)
-
-        val intrinsicValue = getFinalIntrinsicValue(debtPerShare,cashPerShare,intrinsicValueBeforeCashOrDebt)
-
-        val verdict = getVerdict(stockData.lastClose!!, intrinsicValue )
-
-        binding.titleDiscountRateTv.visibility = View.VISIBLE
-        binding.titleIntrinsicTv.visibility = View.VISIBLE
-        binding.titleVerdictTv.visibility = View.VISIBLE
-
-        binding.valueDiscountRateTv.visibility = View.VISIBLE
-        binding.valueIntrinsicTv.visibility = View.VISIBLE
-        binding.valueVerdictTv.visibility = View.VISIBLE
-
-        binding.valueDiscountRateTv.text = discountRate.toString() + "%"
-        binding.valueIntrinsicTv.text = "$" + intrinsicValue.toString()
-        binding.valueVerdictTv.text = "$"+verdict
+//        GlobalScope.launch {
+//            while (true) {
+//                delay(250L)
+//                if (loadingAnalysisStatus == LoadingStatus.SUCCESS && loadingBalanceSheetStatus == LoadingStatus.SUCCESS && loadingStatisticsStatus == LoadingStatus.SUCCESS) {
+//                    break
+//                }
+//            }
+//        }
 
 
     }
 
 
-    private fun getVerdict (lastClose:Float, intrinsicValue:Float):Float{
+    private fun getVerdict(lastClose: Float, intrinsicValue: Float): Float {
 
 
         var premium: Float = intrinsicValue - lastClose
@@ -335,6 +355,7 @@ class StockDetailActivity : AppCompatActivity() {
         return sum
 
     }
+
     private fun getIntrinsicValueBeforeCashOrDebt(
         PV10YrCashFlow: Float,
         numShare: Long
@@ -343,15 +364,19 @@ class StockDetailActivity : AppCompatActivity() {
     }
 
     private fun getDebtPerShare(totalDebt: Long, numShare: Long): Float {
-
+        Log.d(TAG, "---numShare: $numShare")
+        if (numShare == 0L) {
+            return 1F
+        }
         return (totalDebt / numShare).toFloat()
     }
 
     private fun getCashPerShare(totalInvestment: Long, numShare: Long): Float {
+        if (numShare == 0L)
+            return 1F
         return (totalInvestment / numShare).toFloat()
 
     }
-
 
 
     private fun getFinalIntrinsicValue(

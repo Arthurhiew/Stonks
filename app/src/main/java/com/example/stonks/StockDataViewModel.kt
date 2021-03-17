@@ -14,6 +14,9 @@ class StockDataViewModel : ViewModel() {
     val balanceSheetData: LiveData<BalanceSheetResponse?> = repository.getBalanceSheetData()
     val analysisData: LiveData<AnalysisResponse> = repository.getAnalysisData()
 
+    val loadingStatus: LiveData<Int> = repository.getLoadingStatus()
+
+
 //    fun getStatisticsData(): LiveData<Stat isticsResponse> {
 //        return repository.getStatisticsData()
 //    }
