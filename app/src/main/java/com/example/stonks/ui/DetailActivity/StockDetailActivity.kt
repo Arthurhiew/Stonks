@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import com.example.stonks.StockDataViewModel
+import com.example.stonks.WatchListViewModel
 import com.example.stonks.data.StockData
+import com.example.stonks.data.StockDataDao
 import com.example.stonks.data.StockSearchItem
 import com.example.stonks.databinding.ActivityStockDetailBinding
 import kotlin.math.pow
@@ -19,7 +21,7 @@ class StockDetailActivity : AppCompatActivity() {
     private val TAG = StockDetailActivity::class.java.simpleName
     private lateinit var stockDataViewModel: StockDataViewModel
     private var stockData: StockData = StockData()
-
+    private lateinit var watchListViewModel: WatchListViewModel
     private lateinit var mainContentCL: ConstraintLayout
     private lateinit var loadingPb: ProgressBar
     private val growthRate20: Float = 0.041F + 0.01F //long term gdp growth rate in the US + 1%
@@ -31,6 +33,10 @@ class StockDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityStockDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        watchListViewModel =  ViewModelProvider(this,
+            ViewModelProvider.AndroidViewModelFactory(application)
+        ).get(WatchListViewModel::class.java)
 
 //        val PV_Cash_Flow_10yr =
         stockDataViewModel = ViewModelProvider(this).get(StockDataViewModel::class.java)
@@ -252,6 +258,10 @@ class StockDetailActivity : AppCompatActivity() {
                 }
             }
         )
+
+        binding.btnAddToWatchList.setOnClickListener {
+            watchListViewModel.insertStockData(stockData)
+        }
     }
 
 
