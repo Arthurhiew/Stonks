@@ -33,16 +33,6 @@ class HomeFragment : Fragment(), StockDataAdapter.OnItemClickListener, StockData
 
         val rvStockDataItems: RecyclerView = root.findViewById(R.id.rvStockDataItems)
 
-        println("HOME FRAG")
-        watchListViewModel.insertStockData(StockData("A"))
-        watchListViewModel.insertStockData(StockData("B"))
-        watchListViewModel.insertStockData(StockData("C"))
-        watchListViewModel.insertStockData(StockData("D"))
-        watchListViewModel.insertStockData(StockData("E"))
-        watchListViewModel.insertStockData(StockData("F"))
-        watchListViewModel.insertStockData(StockData("G"))
-        watchListViewModel.insertStockData(StockData("H"))
-
         watchListViewModel.allStockData!!.observe(viewLifecycleOwner, {
             if (it != null) {
                 watchList = it

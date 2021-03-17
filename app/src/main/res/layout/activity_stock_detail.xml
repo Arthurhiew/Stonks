@@ -21,6 +21,19 @@
         android:layout_height="match_parent"
         tools:context=".ui.DetailActivity.StockDetailActivity">
 
+        <Button
+            android:id="@+id/btnAddToWatchList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round"
+            android:text="Add to Watch List"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/title_op_cashflow_tv"
             android:layout_width="100dp"
