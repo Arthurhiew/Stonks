@@ -280,16 +280,39 @@
             app:layout_constraintTop_toBottomOf="@+id/title_intrinsic_tv" />
 
         <TextView
+            android:id="@+id/red_value_verdict_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/detail_dummy_number"
+            android:textSize="16sp"
+            android:textColor="@color/red"
+            app:layout_constraintEnd_toEndOf="@+id/title_verdict_tv"
+            app:layout_constraintStart_toStartOf="@+id/title_verdict_tv"
+            app:layout_constraintTop_toBottomOf="@+id/title_verdict_tv" />
+
+        <TextView
+            android:id="@+id/green_value_verdict_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/detail_dummy_number"
+            android:textSize="16sp"
+            android:textColor="@color/green"
+            app:layout_constraintEnd_toEndOf="@+id/title_verdict_tv"
+            app:layout_constraintStart_toStartOf="@+id/title_verdict_tv"
+            app:layout_constraintTop_toBottomOf="@+id/title_verdict_tv" />
+        <TextView
             android:id="@+id/value_verdict_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@string/detail_dummy_number"
             android:textSize="16sp"
+            android:textColor="@color/green"
             app:layout_constraintEnd_toEndOf="@+id/title_verdict_tv"
             app:layout_constraintStart_toStartOf="@+id/title_verdict_tv"
             app:layout_constraintTop_toBottomOf="@+id/title_verdict_tv" />
-
         <TextView
             android:id="@+id/symbol_tv"
             android:layout_width="wrap_content"

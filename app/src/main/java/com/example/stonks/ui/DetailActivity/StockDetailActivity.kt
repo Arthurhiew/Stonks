@@ -240,9 +240,9 @@ class StockDetailActivity : AppCompatActivity() {
                         binding.valueIntrinsicTv.text = "$" + String.format("%.2f", intrinsicValue)
                         stockData.overUnderValued = verdict
                         if (verdict > 0) {
-                            binding.valueVerdictTv.text = "+"+String.format("%.2f", verdict) + "%"
+                            binding.redValueVerdictTv.text = "+"+String.format("%.2f", verdict) + "%"
                         }else{
-                            binding.valueVerdictTv.text = String.format("%.2f", verdict) + "%"
+                            binding.greenValueVerdictTv.text = String.format("%.2f", verdict) + "%"
                         }
                     }
 
