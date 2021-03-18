@@ -16,53 +16,51 @@
             android:id="@+id/tvSymbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAlignment="textStart"
             android:text="@string/stock_data_symbol_placeholder"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tvPrice"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvPrice"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvPrice" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round"
-            android:padding="12sp"
             android:text="@string/stock_data_placeholder_price"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvIntrinsicValue"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvIntrinsicValue"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tvSymbol"
-            app:layout_constraintTop_toTopOf="@+id/tvIntrinsicValue" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvIntrinsicValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round"
-            android:padding="12sp"
             android:text="@string/stock_data_placeholder_intrinsic_value"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/tvOverUnderValued"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tvOverUnderValued"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tvPrice"
-            app:layout_constraintTop_toTopOf="@+id/tvOverUnderValued" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvOverUnderValued"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round"
-            android:padding="12sp"
             android:text="@string/stock_data_placeholder_over_under_valued"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivRemoveIcon"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tvIntrinsicValue"
             app:layout_constraintTop_toTopOf="parent" />
@@ -72,9 +70,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_remove_circle_outline_24"
-            app:layout_constraintBottom_toBottomOf="@+id/tvOverUnderValued"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvOverUnderValued" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tvOverUnderValued"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
