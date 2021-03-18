@@ -8,5 +8,7 @@ data class StockSearchResponse(
 
 data class StockSearchItem(
     val shortname: String,
-    val symbol: String
-) : Serializable
+    var symbol: String
+) : Serializable {
+    constructor() : this("", "")
+}

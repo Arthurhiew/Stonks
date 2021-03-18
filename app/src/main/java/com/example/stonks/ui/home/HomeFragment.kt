@@ -1,6 +1,8 @@
 package com.example.stonks.ui.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,8 @@ import com.example.stonks.R
 import com.example.stonks.WatchListViewModel
 import com.example.stonks.data.StockData
 import com.example.stonks.data.StockDataAdapter
+import com.example.stonks.data.StockSearchItem
+import com.example.stonks.ui.DetailActivity.StockDetailActivity
 
 class HomeFragment : Fragment(), StockDataAdapter.OnItemClickListener, StockDataAdapter.OnDeleteItemClickListener {
 
@@ -47,6 +51,14 @@ class HomeFragment : Fragment(), StockDataAdapter.OnItemClickListener, StockData
 
     override fun onItemClick(position: Int) {
         println("Clicked $position")
+        val resultItem = watchList[position]
+//        Log.d()
+        var item = StockSearchItem()
+        if (resultItem != null) {
+            item.symbol =  resultItem.symbol
+        }
+        Intent(activity, StockDetailActivity::class.java).putExtra("searchResultItem", item)
+            .also { startActivity(it) }
     }
 
     override fun onDeleteItemClick(position: Int) {
