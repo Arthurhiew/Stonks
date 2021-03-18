@@ -41,7 +41,8 @@ class StockDetailActivity : AppCompatActivity() {
         binding = ActivityStockDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        watchListViewModel =  ViewModelProvider(this,
+        watchListViewModel = ViewModelProvider(
+            this,
             ViewModelProvider.AndroidViewModelFactory(application)
         ).get(WatchListViewModel::class.java)
 
@@ -77,11 +78,15 @@ class StockDetailActivity : AppCompatActivity() {
             }
         )
 
+        var shortTermInvestments = 0L
+        var shortLongTermDebt = 0L
+        var cash = 0L
+        var longTermDebt = 0L
         stockDataViewModel.balanceSheetData.observe(
             this,
             { data ->
 
-                var shortTermInvestments = 0L
+//                var shortTermInvestments = 0L
                 if (data != null) {
                     if (data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortTermInvestments != null) {
                         shortTermInvestments =
@@ -91,8 +96,6 @@ class StockDetailActivity : AppCompatActivity() {
                 }
 
 
-                var shortLongTermDebt = 0L
-                var longTermDebt = 0L
                 if (data?.balanceSheetHistoryQuarterly?.balanceSheetStatements?.get(0)?.shortLongTermDebt?.value != null) {
                     shortLongTermDebt =
                         data.balanceSheetHistoryQuarterly.balanceSheetStatements[0].shortLongTermDebt.value
@@ -105,7 +108,6 @@ class StockDetailActivity : AppCompatActivity() {
 
                 stockData.totalDebt = shortLongTermDebt + longTermDebt
 
-                var cash = 0L
                 if (data != null) {
                     if (data.balanceSheetHistoryQuarterly.balanceSheetStatements.get(0).cash != null) {
                         cash =
@@ -161,8 +163,10 @@ class StockDetailActivity : AppCompatActivity() {
             }
         )
 
-
-
+        var debtPerShare: Float = 0F
+        var cashPerShare: Float = 0F
+        var intrinsicValueBeforeCashOrDebt: Float = 0F
+        var pV10YrCashFlow: Float = 0F
         stockDataViewModel.loadingStatus.observe(
             this,
             { status ->
@@ -198,7 +202,7 @@ class StockDetailActivity : AppCompatActivity() {
                     val growthRate10 = stockData.growthRate!!.div(2)
 
                     val discountRate = getDiscountRate(stockData.beta!!).div(100)
-                    val pV10YrCashFlow = getPV10YrCashFlow(
+                    pV10YrCashFlow = getPV10YrCashFlow(
                         stockData.curOpCashFlow!!.toFloat(),
                         stockData.growthRate!!, growthRate10, growthRate20, discountRate
                     )
@@ -209,15 +213,15 @@ class StockDetailActivity : AppCompatActivity() {
 //                    )
 
 
-                    val debtPerShare =
+                    debtPerShare =
                         getDebtPerShare(stockData.totalDebt!!, stockData.sharesOutstanding!!)
-                    val cashPerShare =
+                    cashPerShare =
                         getCashPerShare(
                             stockData.cashNShortTermInvestment!!,
                             stockData.sharesOutstanding!!
                         )
 
-                    val intrinsicValueBeforeCashOrDebt =
+                    intrinsicValueBeforeCashOrDebt =
                         getIntrinsicValueBeforeCashOrDebt(
                             pV10YrCashFlow,
                             stockData.sharesOutstanding!!
@@ -255,8 +259,9 @@ class StockDetailActivity : AppCompatActivity() {
                         if (verdict > 0) {
                             binding.titleVerdictOvervalueTv.visibility = View.VISIBLE
                             binding.redValueVerdictTv.visibility = View.VISIBLE
-                            binding.redValueVerdictTv.text = "+"+String.format("%.2f", verdict) + "%"
-                        }else{
+                            binding.redValueVerdictTv.text =
+                                "+" + String.format("%.2f", verdict) + "%"
+                        } else {
                             binding.greenValueVerdictTv.visibility = View.VISIBLE
                             binding.titleVerdictUndervalueTv.visibility = View.VISIBLE
                             binding.greenValueVerdictTv.text = String.format("%.2f", verdict) + "%"
@@ -295,6 +300,7 @@ class StockDetailActivity : AppCompatActivity() {
 //        1) stock symbol
 //        2)current operating cash flow
 //        3) last close
+//        11) intrinsic value
 //        4) outstanding share
 //        5) cash
 //        6)investment
@@ -302,7 +308,6 @@ class StockDetailActivity : AppCompatActivity() {
 //        8)growth rate yr 1-5
 //        9) growth rate yr 6-10
 //        10) growth rate yr 11-20
-//        11) intrinsic value
 //        12)over/under percentage
 //        13)beta
 //        14)discount rate
@@ -311,52 +316,76 @@ class StockDetailActivity : AppCompatActivity() {
 //        17)cash per share
 //        18) intrinsic value before cash or debt
 //        19) final intrinsic value
+//        20)long term debt
+//        21)shortlongterm debt
+//        22)Total debbt (long term debt + shortlongterm debt
         binding.btnExport.setOnClickListener {
             try {
                 val out = openFileOutput("""${stockData.symbol}.csv""", Context.MODE_PRIVATE)
 //                out.write("symbol, currentOperatingCashFlow, lastClose, outstandingShare, cash, investment, cashNShortTermInvestment, growthRate1-5, growthRate6-10, growthRate11-20, intrinsicValue, overUnderPercentage, beta, discountRate, PV10YrCashFlow, debtPerShare, cashPerShare, intrinsicValueBeforeCashOrDebt, finalIntrinsicValue\n".toByteArray())
-                out.write("symbol, currentOperatingCashFlow, lastClose, outstandingShare, cash, investment, cashNShortTermInvestment, growthRate1-5, growthRate6-10, growthRate11-20, intrinsicValue, overUnderPercentage, beta, discountRate\n".toByteArray())
+                out.write(
+                    (
+                            "symbol, " +
+                                    "last close, " +
+                                    "intrinsic value, " +
+                                    "current operating cash flow, " +
+                                    "outstandingShare, " +
+                                    "cash, " +
+                                    "short term investment, " +
+                                    "cash & short term investment, " +
+                                    "growthRate Yr 1-5, " +
+                                    "growthRate Yr 6-10, " +
+                                    "growthRate Yr 11-20, " +
+                                    "over or under percentage, " +
+                                    "PV of 10 Yr Cash Flow, " +
+                                    "beta, " +
+                                    "short term debt, " +
+                                    "long term debt, " +
+                                    "total debt, " +
+                                    "discount rate, " +
+                                    "debt per share, " +
+                                    "cash per share, " +
+                                    "intrinsic value before cash or debt, " +
+                                    "\n").toByteArray()
+                )
 
-//                val numShare = binding.valueNumShareTv.text as Long
-//                val totalInvestment = binding.valueInvestmentTv.text as Long //CHECK
-//                val debtPerShare = stockData.totalDebt?.let { it1 -> getDebtPerShare(it1, numShare) }
-//                val cashPerShare = getCashPerShare(totalInvestment, numShare)
-//                val growthRate5 =  binding.valueGrowthRate15Tv.text as Float
-//                val growthRate10 = binding.valueGrowthRate510Tv.text as Float
-//                val discountRate = binding.valueDiscountRateTv.text as Float
-//                val curCashFlow = stockData.curOpCashFlow as Float
-//                val pv10YrCashFlow = getPV10YrCashFlow(curCashFlow /*CHECK*/, growthRate5, growthRate10, growthRate20, discountRate)
-//                val intrinsicValueBeforeCashOrDebt = getIntrinsicValueBeforeCashOrDebt(pv10YrCashFlow, numShare)
-//                val finalItrinsicValue = getFinalIntrinsicValue(debtPerShare!!, cashPerShare, intrinsicValueBeforeCashOrDebt)
                 out.write("""${stockData.symbol}, """.toByteArray())
-                out.write("""${stockData.curOpCashFlow}, """.toByteArray())
                 out.write("""${stockData.lastClose}, """.toByteArray())
+                out.write("""${stockData.intrinsicValue}, """.toByteArray())
+                out.write("""${stockData.curOpCashFlow}, """.toByteArray())
                 out.write("""${stockData.sharesOutstanding}, """.toByteArray())
-                out.write("""${stockData.totalDebt}, """.toByteArray())
-                out.write("""${binding.valueInvestmentTv.text}, """.toByteArray())
+                out.write("""$cash ,""".toByteArray())
+                out.write("""${shortTermInvestments} ,""".toByteArray())
                 out.write("""${stockData.cashNShortTermInvestment}, """.toByteArray())
                 out.write("""${binding.valueGrowthRate15Tv.text}, """.toByteArray())
                 out.write("""${binding.valueGrowthRate510Tv.text}, """.toByteArray())
                 out.write("""${binding.valueGrowthRate1120Tv.text}, """.toByteArray())
-                out.write("""${stockData.intrinsicValue}, """.toByteArray())
-//                out.write("""$pv10YrCashFlow, """.toByteArray())
-//                out.write("""${debtPerShare}, """.toByteArray())
-//                out.write("""${cashPerShare}, """.toByteArray())
-//                out.write("""${intrinsicValueBeforeCashOrDebt}, """.toByteArray())
-//                out.write(("""$finalItrinsicValue""" + "\n").toByteArray())
+                out.write("""${stockData.overUnderValued} ,""".toByteArray())
+                out.write("""$pV10YrCashFlow, """.toByteArray())
+                out.write("""${stockData.beta},""".toByteArray())
+                out.write("""$shortLongTermDebt ,""".toByteArray())
+                out.write("""${longTermDebt} ,""".toByteArray())
+                out.write("""${stockData.totalDebt}, """.toByteArray())
+                out.write("""${binding.valueDiscountRateTv.text} ,""".toByteArray())
+                out.write("""$debtPerShare ,""".toByteArray())
+                out.write("""$cashPerShare ,""".toByteArray())
+                out.write("""$intrinsicValueBeforeCashOrDebt ,""".toByteArray())
                 out.close()
 
                 val context = applicationContext
                 val fileLocation = File(filesDir, """${stockData.symbol}.csv""")
-                val path = FileProvider.getUriForFile(context, "com.example.stonks.fileprovider", fileLocation)
+                val path = FileProvider.getUriForFile(
+                    context,
+                    "com.example.stonks.fileprovider",
+                    fileLocation
+                )
                 val fileIntent = Intent(Intent.ACTION_SEND)
                 fileIntent.type = "text/csv"
                 fileIntent.putExtra(Intent.EXTRA_SUBJECT, """${stockData.symbol}""")
                 fileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 fileIntent.putExtra(Intent.EXTRA_STREAM, path)
                 startActivity(Intent.createChooser(fileIntent, "Send csv"))
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
