@@ -15,12 +15,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.stonks.StockDataViewModel
 import com.example.stonks.WatchListViewModel
 import com.example.stonks.data.StockData
-import com.example.stonks.data.StockDataDao
 import com.example.stonks.data.StockSearchItem
 import com.example.stonks.databinding.ActivityStockDetailBinding
-import kotlinx.android.synthetic.main.activity_stock_detail.*
 import java.io.File
-import java.lang.Exception
 import kotlin.math.pow
 
 class StockDetailActivity : AppCompatActivity() {
@@ -411,7 +408,7 @@ class StockDetailActivity : AppCompatActivity() {
             newBeta = 1.6F
         }
 
-        return newBeta + riskFreeRate * marKetRiskPremium
+        return riskFreeRate + newBeta * marKetRiskPremium
     }
 
     private fun getPV10YrCashFlow(
