@@ -253,9 +253,9 @@ class StockDetailActivity : AppCompatActivity() {
 //                        binding.valueVerdictTv.visibility = View.VISIBLE
 //                        binding.valueVerdictTv.text =  "Insufficient data needed to calculate intrinsic value"
                     } else {
-                        stockData.intrinsicValue = intrinsicValue
+                        stockData.intrinsicValue = String.format("%.2f", intrinsicValue).toFloat()
                         binding.valueIntrinsicTv.text = "$" + String.format("%.2f", intrinsicValue)
-                        stockData.overUnderValued = verdict
+                        stockData.overUnderValued = String.format("%.2f", verdict).toFloat()
                         if (verdict > 0) {
                             binding.titleVerdictOvervalueTv.visibility = View.VISIBLE
                             binding.redValueVerdictTv.visibility = View.VISIBLE
