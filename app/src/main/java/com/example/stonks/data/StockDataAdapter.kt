@@ -59,7 +59,7 @@ class StockDataAdapter(
         holder.price.text = currentStockData.lastClose.toString()
         holder.intrinsicValue.text = currentStockData.intrinsicValue.toString()
         if(currentStockData.overUnderValued!! < 0) {
-            holder.overUnderValued.text = """-${currentStockData.overUnderValued.toString()}%"""
+            holder.overUnderValued.text = """${currentStockData.overUnderValued.toString()}%"""
         } else {
             holder.overUnderValued.text = """+${currentStockData.overUnderValued.toString()}%"""
         }
