@@ -15,8 +15,8 @@ StockDetailActivity: Users can navigate to this screen by clicking on the stock 
 SearchActivity: SearchActivity displays search results when users input a keyword. It’ll show the stock’s ticker fds, company name, and a button to add to the watchlist.
 
 ## Authors
-Arthur Hiew
-Josiah Metz
+Arthur Hiew\
+Josiah Metz\
 Quan Nguyen
 
 
