@@ -12,6 +12,13 @@ MainActivity: The MainActivity displays the watchlist. The watchlist is a recycl
 
 StockDetailActivity: Users can navigate to this screen by clicking on the stock StockDetailActivity shows a graph to track a stock price, financial data, the stock’s intrinsic value, and the percentage of how much the stock is over/undervalued.
 
-SearchActivity: SearchActivity displays search results when users input a keyword. It’ll show the stock’s ticker symbol, company name, and a button to add to the watchlist.
+SearchActivity: SearchActivity displays search results when users input a keyword. It’ll show the stock’s ticker fds, company name, and a button to add to the watchlist.
+
+## Authors
+Arthur Hiew
+Josiah Metz
+Quan Nguyen
+
+
 
 
